@@ -26,7 +26,7 @@ int main() {
     int res = 0;
     ei_x_buff res_buf;
     ei_init();
-    while (read_cmd(buf) > 0) {
+    while (read_erl(buf) > 0) {
         if (ei_decode_version(buf, &index, &version) != 0)
             fail(1);
         if (ei_decode_tuple_header(buf, &index, &arity) != 0)
@@ -46,7 +46,7 @@ int main() {
             fail(6);
         if (ei_x_encode_long(&res_buf, res) != 0)
             fail(7);
-        write_cmd(res_buf.buff, res_buf.index);
+        write_erl(res_buf.buff, res_buf.index);
 
         if (ei_x_free(&res_buf) != 0)
             fail(8);

@@ -33,7 +33,7 @@ int write_exact(byte *buf, int len)
   return (len);
 }
 
-int read_cmd(byte *buf)
+int read_erl(byte *buf)
 {
   int len;
 
@@ -43,7 +43,7 @@ int read_cmd(byte *buf)
   return read_exact(buf, len);
 }
 
-int write_cmd(byte *buf, int len)
+int write_erl(byte *buf, int len)
 {
   byte li;
 

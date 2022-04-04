@@ -1,6 +1,6 @@
 
 import threading, queue
-from erlastic import port_connection, Atom as A
+from erlastic import port_connection, encode, Atom as A
 from pprint import pprint
 
 def main():
@@ -14,6 +14,7 @@ def main():
         elif tag == A("update"):
             update_car(data, q)
             if len(q) > 100:
+                port.send(encode(A("please stop"), 5))
                 dump_queue(q)
 
 def set_initial_state(data: tuple) -> None:

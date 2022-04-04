@@ -3,7 +3,7 @@
 
 send_hi(_Port, 0) -> ok;
 send_hi(Port, I) ->
-    Port ! {self(), {command, term_to_binary({init_state, {heyo, "hi",9}})}},
+    Port ! {self(), {command, term_to_binary({update, {heyo, "hi",9}})}},
     timer:sleep(10),
     send_hi(Port, I - 1).
 

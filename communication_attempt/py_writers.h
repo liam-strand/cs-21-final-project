@@ -1,7 +1,7 @@
-#ifndef PY_COMM_INCLUDED
-#define PY_COMM_INCLUDED
+#ifndef PY_WRITERS_INCLUDED
+#define PY_WRITERS_INCLUDED
 
-extern int read_py(char *pipe, char *buf);
-extern int write_py(char *pipe, char *buf, int len);
+extern void Py_write_state(char *pipe, char *buf);
+extern void Py_write_update(char *pipe, char *buf, int len);
 
-#endif /* PY_COMM_INCLUDED */
+#endif /* PY_WRITERS_INCLUDED */
