@@ -42,16 +42,33 @@ load_graph(Path) ->
               end, Roads),
     G.
 
+load_cars(Path) ->
+    {ok, Cfg} = toml:read_file(Path),
+    {array, {object, RawCars}} = toml:get_value([], "cars", Cfg),
+    
+    lists:map(fun(C) ->
+        [{<<"speed">>, Speed},
+        {<<"end">>, End},
+        {<<"start">>, Start}] = C,
+
+        {
+            Speed, 
+            list_to_atom(binary_to_list(Start)), 
+            list_to_atom(binary_to_list(End))
+        }
+
+    end, RawCars).
 
 %% should be spawned, so that the kill switch can be utilized
 run(Path) ->
-    G = load_graph(Path),
+    G    = load_graph(Path),
+    Cars = load_cars(Path),
 
     %% launch a process for each intersection,
     %% and label each intersection with corresponding pid
     lists:map(start_intersection(G), digraph:vertices(G)),
     %% start cars
-    lists:map(start_car(G), [{0.1, davis, harvard}]),
+    lists:map(start_car(G), Cars),
 
     io:format('started everything~n'),
 
