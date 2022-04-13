@@ -1,17 +1,5 @@
 -module(traffic).
--export([run/0]).
-
-
-%% deviations from initial design:
-%% - car progress is [0, road length], not [0, 1]
-%% - car searches for destination while it's waiting,
-%%   not after it gets signaled (more realistic)
-
-%% cars wait in queues of (road, next road) => [car]
-%% isect cycles thru queue and dequeues n cars at a time
-%% wait some number of seconds after dequeueing one road
-
-%% use digraph:get_short_path for pathfinding
+-export([run/1]).
 
 
 %% (Curried) Takes a graph and a vertex (representing an intersection)
@@ -35,39 +23,35 @@ start_car(G) ->
             spawn(car, run, [Car])
     end.
 
+load_graph(Path) ->
+    %% load info from config file
+    {ok, Cfg} = toml:read_file(Path),
+    {array,{string,Inters}} = toml:get_value([], "intersections", Cfg),
+    {array,{array,Roads}}  = toml:get_value([], "roads", Cfg),
+    %% set up the graph
+    G = digraph:new(),
+    lists:map(fun(I) -> 
+                      A = list_to_atom(I),
+                      digraph:add_vertex(G, A) 
+              end, Inters),
+    lists:map(fun(R) -> 
+                      {string,[I,J]} = R,
+                      A = list_to_atom(I),
+                      B = list_to_atom(J),
+                      digraph:add_edge(G, A, B) 
+              end, Roads),
+    G.
+
 
 %% should be spawned, so that the kill switch can be utilized
-run() ->
-    G = digraph:new(),
-
-    %% add intersections
-    digraph:add_vertex(G, alewife),
-    digraph:add_vertex(G, davis),
-    digraph:add_vertex(G, porter),
-    digraph:add_vertex(G, harvard),
-    digraph:add_vertex(G, central),
-    digraph:add_vertex(G, 'kendall/mit'),
-    digraph:add_vertex(G, 'charles/mgh'),
-    digraph:add_vertex(G, 'park street'),
-    digraph:add_vertex(G, 'downtown crossing'),
-    digraph:add_vertex(G, 'south station'),
-
-    %% add roads
-    digraph:add_edge(G, alewife, davis),
-    digraph:add_edge(G, davis, porter),
-    digraph:add_edge(G, porter, harvard),
-    digraph:add_edge(G, harvard, central),
-    digraph:add_edge(G, central, 'kendall/mit'),
-    digraph:add_edge(G, 'kendall/mit', 'charles/mgh'),
-    digraph:add_edge(G, 'charles/mgh', 'park street'),
-    digraph:add_edge(G, 'park street', 'downtown crossing'),
-    digraph:add_edge(G, 'downtown crossing', 'south station'),
+run(Path) ->
+    G = load_graph(Path),
 
     %% launch a process for each intersection,
     %% and label each intersection with corresponding pid
     lists:map(start_intersection(G), digraph:vertices(G)),
     %% start cars
-    lists:map(start_car(G), [{0.1, alewife, 'south station'}]),
+    lists:map(start_car(G), [{0.1, davis, harvard}]),
 
     io:format('started everything~n'),
 

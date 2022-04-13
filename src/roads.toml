@@ -1,0 +1,3 @@
+intersections = ["davis", "porter", "harvard"]
+roads = [ ["davis",   "porter"],
+          ["porter", "harvard"] ]
