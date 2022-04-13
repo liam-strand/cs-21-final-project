@@ -1,17 +1,17 @@
 
-all: dependencies erlcomp run
+all: dependencies run
 
 %.beam: ../src/%.erl
 	erlc $<
 
 dependencies:
-	pip install pygame
-	pip install erlastic
-	pip install tomli
+	python3 -m pip install pygame
+	python3 -m pip install erlastic
+	python3 -m pip install tomli
 
-erlcomp: car.beam intersection.beam traffic.beam
+traffic.beam: car.beam intersection.beam 
 
-run: erlcomp
+run: traffic.beam
 	@echo "traffic:run(\"../src/roads.toml\")." | erl
 
 clean:
