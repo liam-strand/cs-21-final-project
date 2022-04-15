@@ -13,3 +13,13 @@ roads = [
 speed = 0.1
 start = "davis"
 end   = "harvard"
+
+[[cars]]
+speed = 0.1
+start = "davis"
+end   = "porter"
+
+[[cars]]
+speed = 0.1
+start = "porter"
+end   = "harvard"
