@@ -16,6 +16,8 @@ dependencies:
 	@echo "\n\n* * * * * * * * * * *\n* Compiling " \
 	"Erlang *\n* * * * * * * * * * *\n\n"
 
+	@echo "cd ../lib/toml && make install-erlang" | sh
+
 traffic.beam: car.beam intersection.beam 
 
 run: traffic.beam
