@@ -8,10 +8,10 @@ dependencies:
 	@echo -e"\n\n* * * * * * * * * * * * *\n* Installing " \
 	"Libraries *\n* * * * * * * * * * * * *\n\n"
 
-	python3 -m pip -qu --exists-action i install pygame
-	python3 -m pip -qu --exists-action i install erlastic
-	python3 -m pip -qu --exists-action i install tomli
-	python3 -m pip -qu --exists-action i install ../grandalf
+	python3 -m pip -q --exists-action i install --user pygame
+	python3 -m pip -q --exists-action i install --user erlastic
+	python3 -m pip -q --exists-action i install --user tomli
+	python3 -m pip -q --exists-action i install --user ../grandalf
 
 	@echo "\n\n* * * * * * * * * * *\n* Compiling " \
 	"Erlang *\n* * * * * * * * * * *\n\n"
