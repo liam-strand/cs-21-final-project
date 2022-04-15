@@ -1,3 +1,6 @@
 [submodule "toml"]
 	path = toml
 	url = git@github.com:dozzie/toml.git
+[submodule "grandalf"]
+	path = grandalf
+	url = git@github.com:bdcht/grandalf.git
