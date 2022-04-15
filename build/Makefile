@@ -5,13 +5,13 @@ all: dependencies run
 	erlc $<
 
 dependencies:
-	@echo "\n\n* * * * * * * * * * * * *\n* Installing " \
+	@echo -e"\n\n* * * * * * * * * * * * *\n* Installing " \
 	"Libraries *\n* * * * * * * * * * * * *\n\n"
 
-	python3 -m pip -q --exists-action i install pygame
-	python3 -m pip -q --exists-action i install erlastic
-	python3 -m pip -q --exists-action i install tomli
-	python3 -m pip -q --exists-action i install ../grandalf
+	python3 -m pip -qu --exists-action i install pygame
+	python3 -m pip -qu --exists-action i install erlastic
+	python3 -m pip -qu --exists-action i install tomli
+	python3 -m pip -qu --exists-action i install ../grandalf
 
 	@echo "\n\n* * * * * * * * * * *\n* Compiling " \
 	"Erlang *\n* * * * * * * * * * *\n\n"
