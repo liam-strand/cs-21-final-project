@@ -7,11 +7,14 @@ all: dependencies run
 dependencies:
 	@echo "\n\n* * * * * * * * * * * * *\n* Installing " \
 	"Libraries *\n* * * * * * * * * * * * *\n\n"
-	
+
 	python3 -m pip -q --exists-action i install pygame
 	python3 -m pip -q --exists-action i install erlastic
 	python3 -m pip -q --exists-action i install tomli
 	python3 -m pip -q --exists-action i install ../grandalf
+
+	@echo "\n\n* * * * * * * * * * *\n* Compiling " \
+	"Erlang *\n* * * * * * * * * * *\n\n"
 
 traffic.beam: car.beam intersection.beam 
 
