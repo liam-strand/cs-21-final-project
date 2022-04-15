@@ -1,0 +1,7 @@
+{application, toml, [
+  {description, "TOML parser"},
+  {vsn, "0.3.0"},
+  {registered, []},
+  {modules, []},
+  {applications, [kernel, stdlib]}
+]}.

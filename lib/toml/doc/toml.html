@@ -1,0 +1,273 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Module toml</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
+</head>
+<body bgcolor="white">
+<div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<hr>
+
+<h1>Module toml</h1>
+<ul class="index"><li><a href="#description">Description</a></li><li><a href="#types">Data Types</a></li><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>
+     TOML parser module.
+
+
+<h2><a name="description">Description</a></h2>
+     TOML parser module.
+<h2><a name="types">Data Types</a></h2>
+
+<h3 class="typedecl"><a name="type-config">config()</a></h3>
+<p><b>abstract datatype</b>: <tt>config()</tt></p>
+<p>  A tuple with atom <code>toml</code> being its first element.</p>
+
+<h3 class="typedecl"><a name="type-datetime">datetime()</a></h3>
+<p><tt>datetime() = {datetime, <a href="/Users/liamstrand/Desktop/Tufts/Sophomore/cs21/final-project/stdlib/doc/calendar.html#type-datetime">calendar:datetime()</a>, TZ::string()} | {datetime, <a href="/Users/liamstrand/Desktop/Tufts/Sophomore/cs21/final-project/stdlib/doc/calendar.html#type-datetime">calendar:datetime()</a>} | {date, <a href="/Users/liamstrand/Desktop/Tufts/Sophomore/cs21/final-project/stdlib/doc/calendar.html#type-date">calendar:date()</a>} | {time, <a href="/Users/liamstrand/Desktop/Tufts/Sophomore/cs21/final-project/stdlib/doc/calendar.html#type-time">calendar:time()</a>}</tt></p>
+<p><p>  RFC 3339 timestamp (with or without timezone), date, or time.</p>
+ 
+  <code>TZ</code> is either a <code>"Z"</code> (the same as <code>"+00:00"</code>) or has format
+  <code>"[+-]HH:MM"</code>.</p>
+
+<h3 class="typedecl"><a name="type-jsx_list">jsx_list()</a></h3>
+<p><tt>jsx_list() = [<a href="#type-jsx_value">jsx_value()</a>]</tt></p>
+<p>  Array representation, jsx-style.</p>
+
+<h3 class="typedecl"><a name="type-jsx_object">jsx_object()</a></h3>
+<p><tt>jsx_object() = [{}] | [{binary(), <a href="#type-jsx_value">jsx_value()</a>}, ...]</tt></p>
+<p>  Object (inline section/table) representation, jsx-style.</p>
+
+<h3 class="typedecl"><a name="type-jsx_value">jsx_value()</a></h3>
+<p><tt>jsx_value() = binary() | integer() | float() | boolean() | <a href="#type-datetime">datetime()</a> | <a href="#type-jsx_list">jsx_list()</a> | <a href="#type-jsx_object">jsx_object()</a></tt></p>
+<p>  Arbitrary value (scalar/array/object), jsx-style. <code><a href="#type-datetime">datetime()</a></code> is not
+  really jsx-compatible, and there's no <code>null</code>.</p>
+
+<h3 class="typedecl"><a name="type-key">key()</a></h3>
+<p><tt>key() = string()</tt></p>
+<p>  Name of a value in a section.</p>
+
+<h3 class="typedecl"><a name="type-section">section()</a></h3>
+<p><tt>section() = [string()]</tt></p>
+<p>  Name of a section ("table" in TOML's terms). Root section is denoted by
+  empty list (<code>[]</code>).</p>
+
+<h3 class="typedecl"><a name="type-semantic_error">semantic_error()</a></h3>
+<p><tt>semantic_error() = <a href="#type-semerr_redefinition">semerr_redefinition()</a> | <a href="#type-semerr_inline">semerr_inline()</a></tt></p>
+<p>  Data-level error, meaning that data represented by TOML config is forbidden
+  by TOML specification.</p>
+
+<h3 class="typedecl"><a name="type-semerr_data_location">semerr_data_location()</a></h3>
+<p><tt>semerr_data_location() = [pos_integer() | string()]</tt></p>
+<p>  Location of a semantic error in inline data (arrays and objects). The
+  location is a path specified in terms appropriate for respective data
+  types: key for objects, 1-based index for arrays.</p>
+
+<h3 class="typedecl"><a name="type-semerr_inline">semerr_inline()</a></h3>
+<p><tt>semerr_inline() = {duplicate, Key::string(), <a href="#type-semerr_data_location">semerr_data_location()</a>, <a href="#type-semerr_location">semerr_location()</a>} | {type_mismatch, {Pos::pos_integer(), OffendingType::atom(), ExpectedType::atom()}, <a href="#type-semerr_data_location">semerr_data_location()</a>, <a href="#type-semerr_location">semerr_location()</a>}</tt></p>
+<p><p>  Error signifying that inline object has two keys of the same name or an  
+inline array has elements of different types.</p>
+ 
+  <code>Pos</code> is a 1-based index in the array, <code>ExpectedType</code> is data type of the
+  first array element, and <code>OffendingType</code> is the type of the first element
+  that doesn't match.</p>
+
+<h3 class="typedecl"><a name="type-semerr_location">semerr_location()</a></h3>
+<p><tt>semerr_location() = {Path::[string(), ...], CurLine::pos_integer(), PrevLine::pos_integer()}</tt></p>
+<p>  Location information of semantic error. <code>Path</code> is name of the offending
+  section and, if applicable, key.</p>
+
+<h3 class="typedecl"><a name="type-semerr_redefinition">semerr_redefinition()</a></h3>
+<p><tt>semerr_redefinition() = {auto_section, key, <a href="#type-semerr_location">semerr_location()</a>} | {section, key | section | array_section, <a href="#type-semerr_location">semerr_location()</a>} | {array_section, key | section | auto_section, <a href="#type-semerr_location">semerr_location()</a>} | {key, key | section | auto_section | array_section, <a href="#type-semerr_location">semerr_location()</a>}</tt></p>
+<p><p>  Error signifying that a key/section was already defined, either explicitly
+  or implicitly. The structure of the error follows convention of
+  <code>{Type, PreviousType, <a href="#type-semerr_location">semerr_location()</a>}</code>.</p>
+ 
+  <p><code>auto_section</code> in <code>Type</code> means that there already exists a key with the  
+same name as one of the parent sections of the current section.</p>
+ 
+  <code>auto_section</code> in <code>PreviousType</code> means that the section was not defined
+  explicitly, but earlier sections restrict how it could look like (i.e.
+  a subsection was already defined).</p>
+
+<h3 class="typedecl"><a name="type-toml_array">toml_array()</a></h3>
+<p><tt>toml_array() = {empty, []} | {string, [string(), ...]} | {integer, [integer(), ...]} | {float, [float(), ...]} | {boolean, [boolean(), ...]} | {datetime, [<a href="#type-datetime">datetime()</a>, ...]} | {array, [<a href="#type-toml_array">toml_array()</a>, ...]} | {object, [<a href="#type-jsx_object">jsx_object()</a>, ...]}</tt></p>
+<p>  Representation of array's content.</p>
+
+<h3 class="typedecl"><a name="type-toml_error">toml_error()</a></h3>
+<p><tt>toml_error() = {tokenize, Line::pos_integer()} | {parse, Line::pos_integer()} | {semantic, <a href="#type-semantic_error">semantic_error()</a>} | {bad_return, <a href="#type-validate_location">validate_location()</a>, Result::term()} | {validate, <a href="#type-validate_location">validate_location()</a>, <a href="#type-validate_error">validate_error()</a>}</tt></p>
+<p>  Error in processing TOML.</p>
+
+<h3 class="typedecl"><a name="type-toml_value">toml_value()</a></h3>
+<p><tt>toml_value() = {string, string()} | {integer, integer()} | {float, float()} | {boolean, boolean()} | {datetime, <a href="#type-datetime">datetime()</a>} | {array, <a href="#type-toml_array">toml_array()</a>} | {data, term()}</tt></p>
+<p><p>  Value stored under <code><a href="#type-key">key()</a></code>, along with its type.</p>
+ 
+  <p>Custom Erlang structure returned by validation function (<code><a href="#type-validate_fun">validate_fun()</a></code>) is denoted by <code>{data, Data}</code>.</p>
+ 
+  Array of values is doubly typed, first as an array, and then with data type
+  of its content, e.g. <code>{array, {string, ["one", "two", "three"]}}</code>. See
+  <code><a href="#type-toml_array">toml_array()</a></code> for details.</p>
+
+<h3 class="typedecl"><a name="type-validate_error">validate_error()</a></h3>
+<p><tt>validate_error() = term()</tt></p>
+<p>  Error returned by <code><a href="#type-validate_fun">validate_fun()</a></code>. See <code><a href="#type-validate_fun_return">validate_fun_return()</a></code>
+  for details.</p>
+
+<h3 class="typedecl"><a name="type-validate_fun">validate_fun()</a></h3>
+<p><tt>validate_fun() = fun((<a href="#type-section">section()</a>, <a href="#type-key">key()</a>, <a href="#type-toml_value">toml_value()</a> | section, Arg::term()) -&gt; <a href="#type-validate_fun_return">validate_fun_return()</a>)</tt></p>
+<p><p>  Key validation callback. This callback is specified at configuration
+  parsing time and has a chance to further verify validity of a value or even
+  convert it already to its intended form, e.g. listen address
+  <code>"&lt;host&gt;:&lt;port&gt;"</code> can be immediately converted to <code>{Host,Port}</code> tuple.</p>
+ 
+  <p><b>NOTE</b>: Array section ("array of tables" in TOML's terms) is passed
+  as an array of objects, i.e.
+  <code>{array, {object, [<a href="#type-jsx_object">jsx_object()</a>, ...]}}</code>.</p>
+ 
+  Since it's not allowed to have a section and key of the same name,
+  subsections themselves are also subject to validation. Validation function
+  can return <code>ok</code>, <code>{ok,_}</code>, or <code>ignore</code> to accept the section name (the
+  three values have the same result; any data from <code>{ok,Data}</code> is ignored)
+  and <code>{error,_}</code> to reject the name.</p>
+
+<h3 class="typedecl"><a name="type-validate_fun_return">validate_fun_return()</a></h3>
+<p><tt>validate_fun_return() = ok | {ok, Data::term()} | ignore | {error, <a href="#type-validate_error">validate_error()</a>}</tt></p>
+<p><p>  Expected return values from <code><a href="#type-validate_fun">validate_fun()</a></code>.</p>
+ 
+  <p><code>{ok, Data}</code> results in the <code><a href="#type-toml_value">toml_value()</a></code> of <code>{data, Data}</code>.
+  See <a docgen-rel="seemfa" docgen-href="#get_value/3" href="#get_value-3"><code>get_value/3</code></a>.</p>
+ 
+  <code>{error, Reason::<a href="#type-validate_error">validate_error()</a>}</code> is reported by
+  <a docgen-rel="seemfa" docgen-href="#read_file/2" href="#read_file-2"><code>read_file/2</code></a> and <a docgen-rel="seemfa" docgen-href="#parse/2" href="#parse-2"><code>parse/2</code></a> as
+  <code>{error, {validate, Where::<a href="#type-validate_location">validate_location()</a>, Reason}}</code>.</p>
+
+<h3 class="typedecl"><a name="type-validate_location">validate_location()</a></h3>
+<p><tt>validate_location() = {Section::[string()], Key::string(), Line::pos_integer()}</tt></p>
+<p>  Location information of validation error (see <code><a href="#type-validate_fun">validate_fun()</a></code>).</p>
+
+<h2><a name="index">Function Index</a></h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#exists-2">exists/2</a></td><td>Check if the section exists.</td></tr>
+<tr><td valign="top"><a href="#exists-3">exists/3</a></td><td>Check if the key exists.</td></tr>
+<tr><td valign="top"><a href="#foldk-4">foldk/4</a></td><td>Traverse all the values set in a section.</td></tr>
+<tr><td valign="top"><a href="#folds-4">folds/4</a></td><td>Traverse the direct subsections of a section.</td></tr>
+<tr><td valign="top"><a href="#format_error-1">format_error/1</a></td><td>Prepare a human-readable error message out of an error.</td></tr>
+<tr><td valign="top"><a href="#get_value-3">get_value/3</a></td><td>Get tagged value from config.</td></tr>
+<tr><td valign="top"><a href="#get_value-4">get_value/4</a></td><td>Get tagged value from config.</td></tr>
+<tr><td valign="top"><a href="#keys-2">keys/2</a></td><td>List keys of a section.</td></tr>
+<tr><td valign="top"><a href="#parse-1">parse/1</a></td><td>Parse a TOML config from a string.</td></tr>
+<tr><td valign="top"><a href="#parse-2">parse/2</a></td><td>Parse a TOML config from a string.</td></tr>
+<tr><td valign="top"><a href="#read_file-1">read_file/1</a></td><td>Parse a TOML file on disk.</td></tr>
+<tr><td valign="top"><a href="#read_file-2">read_file/2</a></td><td>Parse a TOML file on disk.</td></tr>
+<tr><td valign="top"><a href="#sections-2">sections/2</a></td><td>List direct subsections of a section.</td></tr>
+</table>
+
+<h2><a name="functions">Function Details</a></h2>
+
+<h3 class="function"><a name="exists-2">exists/2</a></h3>
+<div class="spec">
+<p><tt>exists(Section::<a href="#type-section">section()</a>, Config::<a href="#type-config">config()</a>) -&gt; boolean()</tt><br></p>
+<p> </p>
+</div><p>Check if the section exists.
+    If there is a key under the specified name, <code>false</code> is returned.</p>
+
+<h3 class="function"><a name="exists-3">exists/3</a></h3>
+<div class="spec">
+<p><tt>exists(Section::<a href="#type-section">section()</a>, Key::<a href="#type-key">key()</a>, Config::<a href="#type-config">config()</a>) -&gt; boolean()</tt><br></p>
+<p> </p>
+</div><p>Check if the key exists.
+    If there is a section under the specified name, <code>false</code> is returned.</p>
+
+<h3 class="function"><a name="foldk-4">foldk/4</a></h3>
+<div class="spec">
+<p><tt>foldk(Section::<a href="#type-section">section()</a>, Fun, AccIn, Config::<a href="#type-config">config()</a>) -&gt; AccOut</tt>
+<ul class="definitions"><li><tt>Fun = fun((<a href="#type-section">section()</a>, <a href="#type-key">key()</a>, <a href="#type-toml_value">toml_value()</a>, AccIn) -&gt; AccOut)</tt></li><li><tt>AccIn = term()</tt></li><li><tt>AccOut = term()</tt></li></ul></p>
+<p> </p>
+</div><p>Traverse all the values set in a section.</p>
+
+<h3 class="function"><a name="folds-4">folds/4</a></h3>
+<div class="spec">
+<p><tt>folds(Section::<a href="#type-section">section()</a>, Fun, AccIn, Config::<a href="#type-config">config()</a>) -&gt; AccOut</tt>
+<ul class="definitions"><li><tt>Fun = fun((<a href="#type-config">config()</a>, <a href="#type-section">section()</a>, AccIn) -&gt; AccOut)</tt></li><li><tt>AccIn = term()</tt></li><li><tt>AccOut = term()</tt></li></ul></p>
+<p> </p>
+</div><p>Traverse the direct subsections of a section.</p>
+
+<h3 class="function"><a name="format_error-1">format_error/1</a></h3>
+<div class="spec">
+<p><tt>format_error(Reason::term()) -&gt; string()</tt><br></p>
+<p> </p>
+</div><p>Prepare a human-readable error message out of an error.</p>
+
+<h3 class="function"><a name="get_value-3">get_value/3</a></h3>
+<div class="spec">
+<p><tt>get_value(Section::<a href="#type-section">section()</a>, Key::<a href="#type-key">key()</a>, Config::<a href="#type-config">config()</a>) -&gt; <a href="#type-toml_value">toml_value()</a> | none | section</tt><br></p>
+<p> </p>
+</div><p>Get tagged value from config.</p>
+
+<h3 class="function"><a name="get_value-4">get_value/4</a></h3>
+<div class="spec">
+<p><tt>get_value(Section::<a href="#type-section">section()</a>, Key::<a href="#type-key">key()</a>, Config::<a href="#type-config">config()</a>, Default::<a href="#type-toml_value">toml_value()</a>) -&gt; <a href="#type-toml_value">toml_value()</a> | section</tt><br></p>
+<p> </p>
+</div><p>Get tagged value from config.
+    If the key doesn't exist, specified default is returned.</p>
+
+<h3 class="function"><a name="keys-2">keys/2</a></h3>
+<div class="spec">
+<p><tt>keys(Section::<a href="#type-section">section()</a>, Config::<a href="#type-config">config()</a>) -&gt; [<a href="#type-key">key()</a>] | none</tt><br></p>
+<p> </p>
+</div><p><p>List keys of a section.</p>
+ 
+    <p>Only keys that correspond to scalars or arrays are returned. Subsections    
+(which include inline sections) are omitted.</p>
+ 
+    <code>none</code> is returned when <code>Section</code> is neither an explicitly defined
+    section, a section introduced implicitly by defining its subsection, nor
+    an inline section.</p>
+
+<h3 class="function"><a name="parse-1">parse/1</a></h3>
+<div class="spec">
+<p><tt>parse(String::string() | binary() | iolist()) -&gt; {ok, <a href="#type-config">config()</a>} | {error, <a href="#type-toml_error">toml_error()</a>}</tt><br></p>
+<p> </p>
+</div><p>Parse a TOML config from a string.</p>
+
+<h3 class="function"><a name="parse-2">parse/2</a></h3>
+<div class="spec">
+<p><tt>parse(String::string() | binary() | iolist(), Validate::{<a href="#type-validate_fun">validate_fun()</a>, Arg::term()}) -&gt; {ok, <a href="#type-config">config()</a>} | {error, <a href="#type-toml_error">toml_error()</a>}</tt><br></p>
+<p> </p>
+</div><p><p>Parse a TOML config from a string.</p>
+ 
+    Each of the keys in the config is passed through a validation callback
+    that can accept the key, reject it, make it skipped, or further parse its
+    value for later retrieval.</p>
+
+<h3 class="function"><a name="read_file-1">read_file/1</a></h3>
+<div class="spec">
+<p><tt>read_file(File::<a href="/Users/liamstrand/Desktop/Tufts/Sophomore/cs21/final-project/kernel/doc/file.html#type-filename">file:filename()</a>) -&gt; {ok, <a href="#type-config">config()</a>} | {error, ReadError | <a href="#type-toml_error">toml_error()</a>}</tt>
+<ul class="definitions"><li><tt>ReadError = <a href="/Users/liamstrand/Desktop/Tufts/Sophomore/cs21/final-project/kernel/doc/file.html#type-posix">file:posix()</a> | badarg | terminated | system_limit</tt></li></ul></p>
+<p> </p>
+</div><p>Parse a TOML file on disk.</p>
+
+<h3 class="function"><a name="read_file-2">read_file/2</a></h3>
+<div class="spec">
+<p><tt>read_file(File::<a href="/Users/liamstrand/Desktop/Tufts/Sophomore/cs21/final-project/kernel/doc/file.html#type-filename">file:filename()</a>, Validate::{<a href="#type-validate_fun">validate_fun()</a>, Arg::term()}) -&gt; {ok, <a href="#type-config">config()</a>} | {error, ReadError | <a href="#type-toml_error">toml_error()</a>}</tt>
+<ul class="definitions"><li><tt>ReadError = <a href="/Users/liamstrand/Desktop/Tufts/Sophomore/cs21/final-project/kernel/doc/file.html#type-posix">file:posix()</a> | badarg | terminated | system_limit</tt></li></ul></p>
+<p> </p>
+</div><p><p>Parse a TOML file on disk.</p>
+ 
+    Each of the keys in the file is passed through a validation callback that
+    can accept the key, reject it, make it skipped, or further parse its
+    value for later retrieval.</p>
+
+<h3 class="function"><a name="sections-2">sections/2</a></h3>
+<div class="spec">
+<p><tt>sections(Section::<a href="#type-section">section()</a>, Config::<a href="#type-config">config()</a>) -&gt; [<a href="#type-key">key()</a>] | none</tt><br></p>
+<p> </p>
+</div><p><p>List direct subsections of a section.</p>
+ 
+    <code>none</code> is returned when <code>Section</code> is neither an explicitly defined
+    section, a section introduced implicitly by defining its subsection, nor
+    an inline section.</p>
+<hr>
+
+<div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<p><i>Generated by EDoc</i></p>
+</body>
+</html>
