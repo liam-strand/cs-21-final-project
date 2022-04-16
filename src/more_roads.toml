@@ -1,0 +1,41 @@
+intersections = [
+    "DPH", 
+    "Cummings", 
+    "Dowling",
+    "Gantcher",
+    "Tisch",
+    "SEC",
+    "Sci-Tech",
+    "So-Go",
+    "Campus-Center",
+    "Dewick",
+    "Granoff",
+    "Harleston",
+    "Latin",
+    "Powder-House",
+    "Mods"
+]
+
+roads = [ 
+    ["DPH",   "Dowling"],
+    ["Dowling", "Cummings"],
+    ["Cummings", "SEC"],
+    ["Cummings", "Gantcher"],
+    ["SEC", "Sci-Tech"],
+    ["SEC", "Tisch"],
+    ["Tisch", "So-Go"],
+    ["Tisch", "Campus-Center"],
+    ["Campus-Center", "So-Go"],
+    ["Campus-Center", "Dewick"],
+    ["Campus-Center", "Mods"],
+    ["So-Go", "Granoff"],
+    ["Granoff", "Powder-House"],
+    ["Granoff", "Harleston"],
+    ["Harleston", "Latin"],
+    ["Latin", "Dewick"]
+]
+
+[[cars]]
+speed = 0.1
+start = "DPH"
+end   = "Harleston"

@@ -4,10 +4,13 @@ from erlastic import port_connection, encode, Atom as A
 from pprint import pprint
 
 def main():
+
+    # Messages go into mailbox, can send encoded terms to port
     mailbox, port = port_connection()
 
     q = []
 
+    # equivalent of recieve loop in erl
     for (tag, data) in mailbox:
         if tag == A("init_state"):
             set_initial_state(data)

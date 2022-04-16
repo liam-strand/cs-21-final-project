@@ -19,7 +19,7 @@ acyclic and so on, are all kept inside the layout object.
 
 import importlib
 from bisect import bisect
-from sys import getrecursionlimit, setrecursionlimit
+from sys import getrecursionlimit, setrecursionlimit, stderr
 
 from grandalf.utils import *
 
@@ -1065,7 +1065,8 @@ class DigcoLayout(object):
             # update new stress:
             FZ += 2 * float(x.transpose() * b[1:, 0] + y.transpose() * b[1:, 1])
             # test convergence:
-            print("stress=%.10f" % FZ)
+            if self.debug:
+                print("stress=%.10f" % FZ)
             if stress == 0.0:
                 break
             elif abs((stress - FZ) / stress) < self._eps:

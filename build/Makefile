@@ -5,7 +5,7 @@ all: dependencies run
 	erlc $<
 
 dependencies:
-	@echo -e"\n\n* * * * * * * * * * * * *\n* Installing " \
+	@echo -e "\n\n* * * * * * * * * * * * *\n* Installing " \
 	"Libraries *\n* * * * * * * * * * * * *\n\n"
 
 	python3 -m pip -q --exists-action i install --user pygame
@@ -13,7 +13,7 @@ dependencies:
 	python3 -m pip -q --exists-action i install --user tomli
 	python3 -m pip -q --exists-action i install --user ../lib/grandalf
 
-	@echo "\n\n* * * * * * * * * * *\n* Compiling " \
+	@echo -e "\n\n* * * * * * * * * * *\n* Compiling " \
 	"Erlang *\n* * * * * * * * * * *\n\n"
 
 	@echo "cd ../lib/toml && make install-erlang" | sh
