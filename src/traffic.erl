@@ -59,7 +59,19 @@ load_cars(Path) ->
 
     end, RawCars).
 
-%% should be spawned, so that the kill switch can be utilized
+
+
+launch_visualizer() ->
+    open_port({spawn, "python3 -u python_listener.py"},
+              [binary, {packet, 4}]).
+
+communicate(Port) ->
+    receive
+        go -> signal_go();
+        M  -> io:format("bad message: ~w~n", [M])
+    end.
+
+
 run(Path) ->
     G    = load_graph(Path),
     Cars = load_cars(Path),
@@ -73,11 +85,15 @@ run(Path) ->
     io:format('started everything~n'),
 
     %% kill switch, for convenience
-    receive
-        kill -> lists:map(fun(V) -> exit(whereis(V), kill) end, 
-                          digraph:vertices(G))
-    end,
+    %% receive
+    %%     kill -> lists:map(fun(V) -> exit(whereis(V), kill) end, 
+    %%                       digraph:vertices(G))
+    %% end,
+
+    %% launch the python front-end
+    Port = launch_visualizer(),
+    %% communicate with front-end
+    communicate(Port),
 
     %% the end
     ok.
-    

@@ -1,10 +1,9 @@
-
-import threading, queue
+import threading, queue, sys
 from erlastic import port_connection, encode, Atom as A
 from pprint import pprint
 
-def main():
 
+def main():
     # Messages go into mailbox, can send encoded terms to port
     mailbox, port = port_connection()
 
@@ -16,9 +15,10 @@ def main():
             set_initial_state(data)
         elif tag == A("update"):
             update_car(data, q)
+            port.send(A("go"))
             if len(q) > 100:
-                port.send(encode(A("please stop"), 5))
                 dump_queue(q)
+
 
 def set_initial_state(data: tuple) -> None:
     with open("output.txt", "a", encoding="utf-8") as f:
@@ -30,8 +30,12 @@ def update_car(update: tuple, work_queue: list) -> None:
 def dump_queue(jobs: list) -> None:
     with open("output.txt", "a", encoding="utf-8") as f:
         for job in jobs:
-            print(f"crisis alert! {job}", file=f, flush=True)
+            print(f"crisis alert! {job[0]}", file=f, flush=True)
     jobs.clear()
 
+
+
+
+    
 if __name__ == "__main__":
     main()
