@@ -1,25 +1,59 @@
 -module(send_messages).
 -export([go/0, stop/0]).
 
-send_hi(_Port, 0) -> ok;
-send_hi(Port, I) ->
-    %%             everything in term_to_binary is encoded and sent
-    Port ! {self(), {command, term_to_binary({update, {heyo, "hi",9}})}},
-    read_mailbox(Port),
-    send_hi(Port, I - 1).
 
-read_mailbox(Port) ->
+
+car(Mux) ->
+    io:format("car is going~n"),
+    N = rand:uniform(),
+    timer:sleep(round(N * 1000)),
+    Mux ! N,
+    receive
+        go -> car(Mux)
+    end.
+
+%% launch N cars who communicate with `Mux'
+launch_cars(Mux, 0) -> [];
+launch_cars(Mux, N) ->
+    Pid = spawn(fun() -> car(Mux) end),
+    [Pid|launch_cars(Mux, N - 1)].
+
+
+%% collect N updates sent by cars
+get_updates(0) -> [];
+get_updates(N) -> 
+    receive
+        X -> [X|get_updates(N - 1)]
+    end.
+
+
+%% send a 'go' message to a list of cars.
+awaken_cars(Cars) ->
+    Awaken = fun(C) -> C ! go end,
+    lists:map(Awaken, Cars).
+
+
+%% run a multiplexer in a loop, with N cars, communicating with a
+%% python program running on `Port'
+run_mux(Port, Cars, N) ->
+    Updates = get_updates(N),
+    Port ! {self(), {command, term_to_binary({update, Updates})}},
     receive
         {Port, {data, Bin}} -> 
-            io:format("got message: ~w~w~n", [Port, Bin])
-    after 10 -> io:format("no messages this time~n")
+            case binary_to_term(Bin) of
+                go -> awaken_cars(Cars),
+                      io:format("woke cars up~n"),
+                      run_mux(Port, Cars, N);
+                stop -> done
+            end
     end.
 
 
 go() ->
     %%                          -u limits buffering             encoding spec
     Port = open_port({spawn, "python3 -u python_listener.py"},[binary,{packet,4}]),
-    send_hi(Port, 500).
+    Cars = launch_cars(self(), 5),
+    run_mux(Port, Cars, length(Cars)).
 
 
 
