@@ -8,12 +8,14 @@ from display import display_graph
 
 from pprint import pprint
 
+
 def main(argv):
     filename = argv[1]
     sim = Sim_State(filename)
     embeding = embed(sim)
 
     display_graph(embeding, sim.roads)
+
 
 if __name__ == "__main__":
     main(sys.argv)

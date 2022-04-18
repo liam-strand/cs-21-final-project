@@ -1,8 +1,8 @@
-    
 from sim_state import Sim_State
 
 from grandalf.graphs import Vertex, Edge, Graph
 from grandalf.layouts import DigcoLayout
+
 
 def embed(sim: Sim_State):
     vertices = [Vertex(data) for data in sim.intersections]
@@ -19,7 +19,7 @@ def embed(sim: Sim_State):
     class defaultView(object):
         w, h = 10, 10
 
-    for v in vertices: 
+    for v in vertices:
         v.view = defaultView()
 
     dig = DigcoLayout(graph.C[0])
