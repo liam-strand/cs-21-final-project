@@ -10,7 +10,10 @@ run(__I) ->
     _I = cycle_lights(__I),
     I  = register_car(_I),
     timer:sleep(3000),
-    run(I).
+    receive
+        go   -> run(I);
+        stop -> ok
+    end.
 
 
 %% Create a new intersection, given incoming and outgoing roads.

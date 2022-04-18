@@ -10,7 +10,8 @@ start_intersection(G) ->
             In  = digraph:in_neighbours(G, V),
             Out = digraph:out_neighbours(G, V),
             I = intersection:new(In, Out),
-            register(V, spawn(intersection, run, [I]))
+            register(V, spawn(intersection, run, [I])),
+            V
     end.
 
 %% (Curried) Takes a graph and a speed, start vertex, and finish
@@ -20,7 +21,7 @@ start_car(G) ->
     fun({Speed, Start, Finish}) ->
             Stops = digraph:get_short_path(G, Start, Finish),
             Car   = car:new(Speed, Stops),
-            spawn(car, run, [Car])
+            spawn(car, run, [self(), Car])
     end.
 
 load_graph(Path) ->
@@ -59,25 +60,48 @@ load_cars(Path) ->
 
     end, RawCars).
 
-%% should be spawned, so that the kill switch can be utilized
+
+awaken(Pid) -> Pid ! go.
+
+
+%% collect N updates sent by cars
+get_updates(0) -> [];
+get_updates(N) -> 
+    receive
+        X -> [X|get_updates(N - 1)]
+    end.
+
+
+run_mux(Port, Inters, Cars, N) ->
+    Updates = get_updates(N),
+    Port ! {self(), {command, term_to_binary({update, Updates})}},
+    receive
+        {Port, {data, Bin}} -> 
+            case binary_to_term(Bin) of
+                go -> lists:map(fun awaken/1, Cars),
+                      lists:map(fun awaken/1, Inters),
+                      run_mux(Port, Inters, Cars, N);
+                stop -> done
+            end
+    end.
+
+
+
 run(Path) ->
     G    = load_graph(Path),
     Cars = load_cars(Path),
 
     %% launch a process for each intersection,
     %% and label each intersection with corresponding pid
-    lists:map(start_intersection(G), digraph:vertices(G)),
+    Is = lists:map(start_intersection(G), digraph:vertices(G)),
     %% start cars
-    lists:map(start_car(G), Cars),
+    Cs = lists:map(start_car(G), Cars),
 
     io:format('started everything~n'),
+    Port = open_port({spawn, "python3 -u python_listener.py"},
+                     [binary,{packet,4}]),
 
-    %% kill switch, for convenience
-    receive
-        kill -> lists:map(fun(V) -> exit(whereis(V), kill) end, 
-                          digraph:vertices(G))
-    end,
+    run_mux(Port, Is, Cs, length(Cs)),
 
     %% the end
     ok.
-    

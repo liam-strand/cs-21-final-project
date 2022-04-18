@@ -1,0 +1,14 @@
+====== NOTES
+
+
+------- How to run erlang stuff
+In then src/ directory, you can run
+
+   $ erlc -o ebin {car,intersection,traffic}.erl
+   $ erl -pa ebin/ ../lib/toml/ebin
+
+which compiles the simulation code and puts the beam files in ebin/,
+and then launches an erlang repl with the simulation and toml binaries
+loaded in.  You can then call `traffic:run("roads.toml")' to start the
+simulation.
+
