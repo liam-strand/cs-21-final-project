@@ -18,13 +18,13 @@ dependencies:
 
 	@echo "cd ../lib/toml && make install-erlang" | sh
 
-traffic.beam: car.beam intersection.beam 
+traffic.beam: ports.beam car.beam intersection.beam
 
 run: traffic.beam
 	@echo "\n\n* * * * * * * * * * * *\n* Starting" \
 	"Simulation *\n* * * * * * * * * * * *\n\n"
 
-	@echo "traffic:run(\"../src/roads.toml\")." | erl
+	@echo "observer:start(). \ntraffic:run(\"../src/more_roads.toml\")." | erl
 
 clean:
 	rm -f *.beam

@@ -16,11 +16,12 @@ start_intersection(G) ->
 %% (Curried) Takes a graph and a speed, start vertex, and finish
 %% vertex.  Spawns a car that travels from start to finish at the
 %% given speed.
-start_car(G) ->
+start_car(G, Port_Manager) ->
     fun({Speed, Start, Finish}) ->
             Stops = digraph:get_short_path(G, Start, Finish),
             Car   = car:new(Speed, Stops),
-            spawn(car, run, [Car])
+            io:format("~w~n", [Car]),
+            spawn(car, run, [Car, Port_Manager])
     end.
 
 load_graph(Path) ->
@@ -38,7 +39,8 @@ load_graph(Path) ->
                       {string,[I,J]} = R,
                       A = list_to_atom(I),
                       B = list_to_atom(J),
-                      digraph:add_edge(G, A, B) 
+                      digraph:add_edge(G, A, B),
+                      digraph:add_edge(G, B, A) 
               end, Roads),
     G.
 
@@ -63,12 +65,15 @@ load_cars(Path) ->
 run(Path) ->
     G    = load_graph(Path),
     Cars = load_cars(Path),
+    io:format("~w~n", [Cars]),
+    Port_Manager = spawn(ports, manage, [self(), Path]),
+    receive {Port_Manager, ready} -> ok end,
 
     %% launch a process for each intersection,
     %% and label each intersection with corresponding pid
     lists:map(start_intersection(G), digraph:vertices(G)),
     %% start cars
-    lists:map(start_car(G), Cars),
+    lists:map(start_car(G, Port_Manager), Cars),
 
     io:format('started everything~n'),
 

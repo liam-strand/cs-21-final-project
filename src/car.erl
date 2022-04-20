@@ -1,10 +1,11 @@
 -module(car).
--export([new/2, run/1]).
+-export([new/2, run/2]).
 
 -record(car, {speed, pos=0, stops}).
 
 
 new(Speed, Stops) ->
+    io:format("~w~n", [Stops]),
     #car{speed=Speed, stops=Stops}.
 
 
@@ -12,21 +13,26 @@ new(Speed, Stops) ->
 %% abiding by all the traffic laws.
 %% 
 %% Finish if at end of path.
-run(#car{stops=[ ]}) -> 
+run(#car{stops=[ ]}, Port_Manager) -> 
+    Port_Manager ! {self(), finished, none},
     io:format("~w finished!~n", [self()]);
-run(#car{stops=[_]}) -> 
+run(#car{stops=[_]}, Port_Manager) -> 
+    Port_Manager ! {self(), finished, none},
     io:format("~w finished!~n", [self()]);
-run(#car{stops=[_,_],pos=P}) when P >= 1.0 -> 
+run(#car{stops=[_,_],pos=P}, Port_Manager) when P >= 1.0 -> 
+    Port_Manager ! {self(), finished, none},
     io:format("~w finished!~n", [self()]);
 
 %% wait at intersection when we reach it
-run(Car) when Car#car.pos >= 1.0 -> 
-    run(wait(Car));
+run(Car, Port_Manager) when Car#car.pos >= 1.0 -> 
+    update(Car, Port_Manager, wait),
+    run(wait(Car), Port_Manager);
 
 %% otherwise just go along road
-run(Car) -> 
-    timer:sleep(500),
-    run(Car#car{pos = Car#car.pos + Car#car.speed}).
+run(Car, Port_Manager) -> 
+    update(Car, Port_Manager),
+    timer:sleep(50),
+    run(Car#car{pos = Car#car.pos + Car#car.speed}, Port_Manager).
 
 
 
@@ -40,3 +46,11 @@ wait(#car{stops=[Prev|[Cur|Next]], speed=S}) ->
         go -> io:format("~w got signal -> ~w~n", [self(), Next]),
               #car{speed=S, stops=[Cur|Next]}
     end.
+
+update(Car, Port_Manager) ->
+    [Prev | [Next |_]] = Car#car.stops,
+    Port_Manager ! {self(), update, {Car#car.pos, Prev, Next}}.
+
+update(Car, Port_Manager, wait) ->
+    [Prev | [Next |_]] = Car#car.stops,
+    Port_Manager ! {self(), update, {0.9, Prev, Next}}.
