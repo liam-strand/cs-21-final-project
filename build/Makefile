@@ -24,7 +24,7 @@ run: traffic.beam
 	@echo "\n\n* * * * * * * * * * * *\n* Starting" \
 	"Simulation *\n* * * * * * * * * * * *\n\n"
 
-	@echo "traffic:run(\"../src/more_roads.toml\")." | erl
+	@echo "traffic:run(\"../src/more_roads.toml\")." | erl -pa ../lib/toml/ebin
 
 clean:
 	rm -f *.beam
