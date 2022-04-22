@@ -36,6 +36,451 @@ roads = [
 ]
 
 [[cars]]
-speed = 0.1
+speed = 0.043
 start = "DPH"
+end   = "Latin"
+
+[[cars]]
+speed = 0.02
+start = "DPH"
+end   = "SEC"
+
+[[cars]]
+speed = 0.041
+start = "DPH"
+end   = "Campus-Center"
+
+[[cars]]
+speed = 0.045
+start = "DPH"
+end   = "So-Go"
+
+[[cars]]
+speed = 0.038
+start = "DPH"
+end   = "Dewick"
+
+[[cars]]
+speed = 0.022
+start = "DPH"
+end   = "Dewick"
+
+[[cars]]
+speed = 0.04
+start = "Cummings"
+end   = "Dowling"
+
+[[cars]]
+speed = 0.027
+start = "Cummings"
+end   = "Tisch"
+
+[[cars]]
+speed = 0.022
+start = "Cummings"
+end   = "SEC"
+
+[[cars]]
+speed = 0.034
+start = "Cummings"
+end   = "Granoff"
+
+[[cars]]
+speed = 0.04
+start = "Cummings"
+end   = "So-Go"
+
+[[cars]]
+speed = 0.032
+start = "Cummings"
+end   = "SEC"
+
+[[cars]]
+speed = 0.023
+start = "Dowling"
+end   = "SEC"
+
+[[cars]]
+speed = 0.044
+start = "Dowling"
+end   = "DPH"
+
+[[cars]]
+speed = 0.041
+start = "Dowling"
+end   = "DPH"
+
+[[cars]]
+speed = 0.024
+start = "Dowling"
+end   = "Latin"
+
+[[cars]]
+speed = 0.044
+start = "Dowling"
+end   = "Latin"
+
+[[cars]]
+speed = 0.028
+start = "Dowling"
+end   = "Tisch"
+
+[[cars]]
+speed = 0.036
+start = "Gantcher"
+end   = "Dowling"
+
+[[cars]]
+speed = 0.032
+start = "Gantcher"
+end   = "Granoff"
+
+[[cars]]
+speed = 0.034
+start = "Gantcher"
+end   = "Mods"
+
+[[cars]]
+speed = 0.033
+start = "Gantcher"
+end   = "Latin"
+
+[[cars]]
+speed = 0.039
+start = "Gantcher"
+end   = "Mods"
+
+[[cars]]
+speed = 0.023
+start = "Gantcher"
+end   = "So-Go"
+
+[[cars]]
+speed = 0.036
+start = "Tisch"
+end   = "Cummings"
+
+[[cars]]
+speed = 0.028
+start = "Tisch"
+end   = "Dowling"
+
+[[cars]]
+speed = 0.044
+start = "Tisch"
+end   = "Dewick"
+
+[[cars]]
+speed = 0.043
+start = "Tisch"
+end   = "Granoff"
+
+[[cars]]
+speed = 0.027
+start = "Tisch"
+end   = "DPH"
+
+[[cars]]
+speed = 0.022
+start = "Tisch"
+end   = "Dewick"
+
+[[cars]]
+speed = 0.028
+start = "SEC"
+end   = "Dowling"
+
+[[cars]]
+speed = 0.043
+start = "SEC"
+end   = "Sci-Tech"
+
+[[cars]]
+speed = 0.032
+start = "SEC"
+end   = "So-Go"
+
+[[cars]]
+speed = 0.021
+start = "SEC"
+end   = "Cummings"
+
+[[cars]]
+speed = 0.026
+start = "SEC"
+end   = "Granoff"
+
+[[cars]]
+speed = 0.047
+start = "SEC"
+end   = "DPH"
+
+[[cars]]
+speed = 0.02
+start = "Sci-Tech"
+end   = "DPH"
+
+[[cars]]
+speed = 0.025
+start = "Sci-Tech"
+end   = "Dewick"
+
+[[cars]]
+speed = 0.042
+start = "Sci-Tech"
+end   = "Tisch"
+
+[[cars]]
+speed = 0.026
+start = "Sci-Tech"
+end   = "Latin"
+
+[[cars]]
+speed = 0.045
+start = "Sci-Tech"
+end   = "Cummings"
+
+[[cars]]
+speed = 0.022
+start = "Sci-Tech"
+end   = "Campus-Center"
+
+[[cars]]
+speed = 0.039
+start = "So-Go"
+end   = "Latin"
+
+[[cars]]
+speed = 0.043
+start = "So-Go"
+end   = "Mods"
+
+[[cars]]
+speed = 0.03
+start = "So-Go"
+end   = "Powder-House"
+
+[[cars]]
+speed = 0.026
+start = "So-Go"
+end   = "Latin"
+
+[[cars]]
+speed = 0.045
+start = "So-Go"
+end   = "Sci-Tech"
+
+[[cars]]
+speed = 0.046
+start = "So-Go"
+end   = "Mods"
+
+[[cars]]
+speed = 0.033
+start = "Campus-Center"
+end   = "Gantcher"
+
+[[cars]]
+speed = 0.03
+start = "Campus-Center"
+end   = "SEC"
+
+[[cars]]
+speed = 0.027
+start = "Campus-Center"
+end   = "Granoff"
+
+[[cars]]
+speed = 0.029
+start = "Campus-Center"
+end   = "Dewick"
+
+[[cars]]
+speed = 0.047
+start = "Campus-Center"
+end   = "Latin"
+
+[[cars]]
+speed = 0.032
+start = "Campus-Center"
 end   = "Harleston"
+
+[[cars]]
+speed = 0.033
+start = "Dewick"
+end   = "Granoff"
+
+[[cars]]
+speed = 0.04
+start = "Dewick"
+end   = "Mods"
+
+[[cars]]
+speed = 0.04
+start = "Dewick"
+end   = "Campus-Center"
+
+[[cars]]
+speed = 0.034
+start = "Dewick"
+end   = "Granoff"
+
+[[cars]]
+speed = 0.033
+start = "Dewick"
+end   = "Mods"
+
+[[cars]]
+speed = 0.021
+start = "Dewick"
+end   = "Sci-Tech"
+
+[[cars]]
+speed = 0.047
+start = "Granoff"
+end   = "Sci-Tech"
+
+[[cars]]
+speed = 0.024
+start = "Granoff"
+end   = "Powder-House"
+
+[[cars]]
+speed = 0.025
+start = "Granoff"
+end   = "Campus-Center"
+
+[[cars]]
+speed = 0.031
+start = "Granoff"
+end   = "Tisch"
+
+[[cars]]
+speed = 0.023
+start = "Granoff"
+end   = "Powder-House"
+
+[[cars]]
+speed = 0.027
+start = "Granoff"
+end   = "Gantcher"
+
+[[cars]]
+speed = 0.027
+start = "Harleston"
+end   = "DPH"
+
+[[cars]]
+speed = 0.036
+start = "Harleston"
+end   = "Mods"
+
+[[cars]]
+speed = 0.035
+start = "Harleston"
+end   = "Mods"
+
+[[cars]]
+speed = 0.047
+start = "Harleston"
+end   = "Dewick"
+
+[[cars]]
+speed = 0.021
+start = "Harleston"
+end   = "Dowling"
+
+[[cars]]
+speed = 0.032
+start = "Harleston"
+end   = "Dowling"
+
+[[cars]]
+speed = 0.028
+start = "Latin"
+end   = "Harleston"
+
+[[cars]]
+speed = 0.04
+start = "Latin"
+end   = "Mods"
+
+[[cars]]
+speed = 0.048
+start = "Latin"
+end   = "Mods"
+
+[[cars]]
+speed = 0.026
+start = "Latin"
+end   = "Cummings"
+
+[[cars]]
+speed = 0.045
+start = "Latin"
+end   = "Campus-Center"
+
+[[cars]]
+speed = 0.044
+start = "Latin"
+end   = "Campus-Center"
+
+[[cars]]
+speed = 0.022
+start = "Powder-House"
+end   = "Cummings"
+
+[[cars]]
+speed = 0.031
+start = "Powder-House"
+end   = "Mods"
+
+[[cars]]
+speed = 0.043
+start = "Powder-House"
+end   = "Cummings"
+
+[[cars]]
+speed = 0.04
+start = "Powder-House"
+end   = "Mods"
+
+[[cars]]
+speed = 0.023
+start = "Powder-House"
+end   = "Campus-Center"
+
+[[cars]]
+speed = 0.033
+start = "Powder-House"
+end   = "Dowling"
+
+[[cars]]
+speed = 0.026
+start = "Mods"
+end   = "DPH"
+
+[[cars]]
+speed = 0.037
+start = "Mods"
+end   = "Campus-Center"
+
+[[cars]]
+speed = 0.024
+start = "Mods"
+end   = "Latin"
+
+[[cars]]
+speed = 0.049
+start = "Mods"
+end   = "Cummings"
+
+[[cars]]
+speed = 0.029
+start = "Mods"
+end   = "Sci-Tech"
+
+[[cars]]
+speed = 0.022
+start = "Mods"
+end   = "Cummings"

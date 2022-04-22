@@ -5,6 +5,7 @@
 
 
 new(Speed, Stops) ->
+    io:format("~w~n", [Stops]),
     #car{speed=Speed, stops=Stops}.
 
 

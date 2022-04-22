@@ -9,13 +9,10 @@ class Sim_State:
             config = tomllib.load(f)
         self.intersections = config["intersections"]
         self.roads = config["roads"]
-        self.cars = [
-            Car(start=c["start"], end=c["end"], speed=c["speed"])
-            for c in config["cars"]
-        ]
+        
 
     def __repr__(self):
-        return f"{{\nintersections: {self.intersections},\nroads:         {self.roads},\ncars:          {self.cars}\n}}"
+        return f"{{\nintersections: {self.intersections},\nroads:         {self.roads},\n}}"
 
 
 if __name__ == "__main__":

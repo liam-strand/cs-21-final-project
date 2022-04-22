@@ -21,6 +21,7 @@ start_car(G) ->
     fun({Speed, Start, Finish}) ->
             Stops = digraph:get_short_path(G, Start, Finish),
             Car   = car:new(Speed, Stops),
+
             spawn(car, run, [self(), Car])
     end.
 
@@ -39,7 +40,8 @@ load_graph(Path) ->
                       {string,[I,J]} = R,
                       A = list_to_atom(I),
                       B = list_to_atom(J),
-                      digraph:add_edge(G, A, B) 
+                      digraph:add_edge(G, A, B),
+                      digraph:add_edge(G, B, A) 
               end, Roads),
     G.
 
@@ -90,15 +92,19 @@ run_mux(Port, Inters, Cars, N) ->
 run(Path) ->
     G    = load_graph(Path),
     Cars = load_cars(Path),
+    io:format("~w~n", [Cars]),
 
     %% launch a process for each intersection,
     %% and label each intersection with corresponding pid
     Is = lists:map(start_intersection(G), digraph:vertices(G)),
     %% start cars
+
     Cs = lists:map(start_car(G), Cars),
 
     io:format('started everything~n'),
-    Port = open_port({spawn, "python3 -u python_listener.py"},
+    %% Port = open_port({spawn, "python3 -u python_listener.py"},
+    %%                  [binary,{packet,4}]),
+    Port = open_port({spawn, "python3 -u visualization.py " ++ Path},
                      [binary,{packet,4}]),
 
     run_mux(Port, Is, Cs, length(Cs)),

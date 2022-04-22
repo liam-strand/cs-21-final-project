@@ -1,6 +1,5 @@
 from pprint import pprint
 import sys
-from erlastic import port_connection, encode, Atom
 
 from sim_state import Sim_State
 from embed_graph import embed
