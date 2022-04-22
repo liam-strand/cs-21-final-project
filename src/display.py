@@ -20,6 +20,7 @@ WHITE = 255, 255, 255
 BLUE = 0, 0, 255
 RED = 255, 0, 0
 BLACK = 0, 0, 0
+GREY = 107, 107, 109
 
 def display_graph(embeding: dict, roads: list) -> None:
     pygame.init()
@@ -82,7 +83,7 @@ def listen_to_erlang(screen, visual_embeding, roads):
         break
 
 def draw_background(screen, visual_embeding: dict, roads: list):
-    screen.fill(WHITE)
+    screen.fill(GREY)
 
     for start, end in roads:
         pygame.draw.line(screen, RED, visual_embeding[start], visual_embeding[end], 4)
