@@ -9,7 +9,7 @@
 run(__I) -> 
     _I = cycle_lights(__I),
     I  = register_car(_I),
-    timer:sleep(3000),
+    timer:sleep(500 + rand:uniform(500)),
     run(I).
 
 
@@ -57,7 +57,15 @@ signal_light(I, L) ->
     %% signal cars at start of queue to go
     Q = maps:get(L, I#intersect.queues),
     {Lucky, Rest} = queue:split(min(5, queue:len(Q)), Q),
-    queue:fold(fun(Car,_) -> Car ! go end, nil, Lucky),
+    awaken_queue(Lucky),
     %% update queue map
     Queues = maps:update(L, Rest, I#intersect.queues),
     I#intersect{queues=Queues}.
+
+
+%% Awaken a queue of cars.  It would be better to use queue:fold to do
+%% this, but queue:fold was added in version 24 of OTP, and not all
+%% systems (e.g. my Debian system) support OTP 24 yet.
+awaken_queue(Q) ->
+    L = queue:to_list(Q),
+    lists:map(fun(Car) -> Car ! go end, L).

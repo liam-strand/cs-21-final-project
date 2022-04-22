@@ -23,7 +23,7 @@ BLACK = 0, 0, 0
 
 def display_graph(embeding: dict, roads: list) -> None:
     pygame.init()
-    size = width, height = 1000, 1000
+    size = width, height = 500, 500 # 1000, 1000
 
 
     x_min, x_max, y_min, y_max = determine_bounds(embeding)
@@ -109,9 +109,9 @@ def determine_bounds(embeding: dict):
 
     return x_min, x_max, y_min, y_max
 
-def determine_scale(min_val: float, max_val: float, target_width: int = 1000):
-    scale = (target_width * 0.8) / (max_val - min_val)
-    offset = -min_val * scale + 100
+def determine_scale(min_val: float, max_val: float, target_width: int = 500):
+    scale = (target_width * 0.9) / (max_val - min_val)
+    offset = -min_val * scale + 50
     return offset, scale
 
 def draw_car(c: Car, screen, visual_embeding) -> None:

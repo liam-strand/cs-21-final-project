@@ -11,7 +11,7 @@ dependencies:
 	python3 -m pip -q --exists-action i install --user pygame
 	python3 -m pip -q --exists-action i install --user erlastic
 	python3 -m pip -q --exists-action i install --user tomli
-	python3 -m pip -q --exists-action i install --user ../lib/grandalf
+	python3 -m pip -q --exists-action i install --user grandalf
 
 	@echo -e "\n\n* * * * * * * * * * *\n* Compiling " \
 	"Erlang *\n* * * * * * * * * * *\n\n"
