@@ -1,4 +1,3 @@
-from pprint import pprint
 import sys
 
 from sim_state import Sim_State
@@ -7,6 +6,9 @@ from display import display_graph
 
 from pprint import pprint
 
+
+
+from erlastic import port_connection, encode, Atom as A
 
 def main(argv):
     filename = argv[1]
@@ -18,3 +20,4 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv)
+

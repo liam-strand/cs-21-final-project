@@ -1,6 +1,20 @@
+# IMPORTANT NOTE:
+#
+# Everything from stdout gets sent to the Erlang program that spawned
+# this python process, as part of the port driver abstraction.  This
+# means that any erroneous output will confuse the Erlang server and
+# effectively break the whole program.  Normally, pygame prints a
+# message to stdout when you import it, so we have to set this
+# environment variable in order to suppress that message.
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+
+
 import pygame
 import sys
+
 from pprint import pprint
+# from erlastic import port_connection, Atom
 from erlastic import port_connection, Atom
 from car import Car
 
@@ -11,8 +25,7 @@ BLACK = 0, 0, 0
 
 def display_graph(embeding: dict, roads: list) -> None:
     pygame.init()
-    size = width, height = 1000, 1000
-
+    size = width, height = 500, 500
 
     x_min, x_max, y_min, y_max = determine_bounds(embeding)
     x_offset, x_scale = determine_scale(x_min, x_max)
@@ -34,9 +47,10 @@ def display_graph(embeding: dict, roads: list) -> None:
     
         
 def listen_to_erlang(screen, visual_embeding, roads):
-    messages, _port = port_connection()
+    messages, port = port_connection()
     print("successful connection", file=sys.stderr, flush=True)
 
+    
     cars = {}
 
     while True:
@@ -54,7 +68,8 @@ def listen_to_erlang(screen, visual_embeding, roads):
                 cars.pop(pid)
             else:
                 print("oof", file=sys.stderr)
-
+                
+            port.send(Atom("go"))
             print("processed messages", file=sys.stderr)
             draw_cars(screen, cars, visual_embeding)
             print("drew cars", file=sys.stderr)

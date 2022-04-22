@@ -70,21 +70,29 @@ awaken(Pid) -> Pid ! go.
 get_updates(0) -> [];
 get_updates(N) -> 
     receive
-        X -> [X|get_updates(N - 1)]
+        X ->
+            io:format("got update: ~w~n", [X]),
+            [X|get_updates(N - 1)]
     end.
 
 
 run_mux(Port, Inters, Cars, N) ->
+    io:format("hi...~n"),
     Updates = get_updates(N),
+    io:format("got updates~n"),
     Port ! {self(), {command, term_to_binary({update, Updates})}},
+    io:format("sent updates~n"),
     receive
         {Port, {data, Bin}} -> 
+            io:format("got data from port~n"),
             case binary_to_term(Bin) of
                 go -> lists:map(fun awaken/1, Cars),
                       lists:map(fun awaken/1, Inters),
                       run_mux(Port, Inters, Cars, N);
-                stop -> done
-            end
+                stop -> done;
+                X -> io:format("bad port message: ~w~n", [X])
+            end;
+        X -> io:format("got bad message: ~w~n", [X])
     end.
 
 

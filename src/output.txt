@@ -1,2 +1,13 @@
 
 received message: [((Atom('davis'), Atom('porter')), 0.1), ((Atom('davis'), Atom('porter')), 0.1), ((Atom('porter'), Atom('harvard')), 0.1)]
+received message: [(<0.77.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.1), (<0.78.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.1), (<0.79.0>::nonode@nohost, (Atom('porter'), Atom('harvard')), 0.1)]
+received message: [(<0.77.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.2), (<0.78.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.2), (<0.79.0>::nonode@nohost, (Atom('porter'), Atom('harvard')), 0.2)]
+received message: [(<0.77.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.30000000000000004), (<0.78.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.30000000000000004), (<0.79.0>::nonode@nohost, (Atom('porter'), Atom('harvard')), 0.30000000000000004)]
+received message: [(<0.77.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.4), (<0.78.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.4), (<0.79.0>::nonode@nohost, (Atom('porter'), Atom('harvard')), 0.4)]
+received message: [(<0.77.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.5), (<0.78.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.5), (<0.79.0>::nonode@nohost, (Atom('porter'), Atom('harvard')), 0.5)]
+received message: [(<0.77.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.6), (<0.78.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.6), (<0.79.0>::nonode@nohost, (Atom('porter'), Atom('harvard')), 0.6)]
+received message: [(<0.77.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.7), (<0.78.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.7), (<0.79.0>::nonode@nohost, (Atom('porter'), Atom('harvard')), 0.7)]
+received message: [(<0.77.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.7999999999999999), (<0.78.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.7999999999999999), (<0.79.0>::nonode@nohost, (Atom('porter'), Atom('harvard')), 0.7999999999999999)]
+received message: [(<0.77.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.8999999999999999), (<0.78.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.8999999999999999), (<0.79.0>::nonode@nohost, (Atom('porter'), Atom('harvard')), 0.8999999999999999)]
+received message: [(<0.77.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.9999999999999999), (<0.78.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 0.9999999999999999), (<0.79.0>::nonode@nohost, (Atom('porter'), Atom('harvard')), 0.9999999999999999)]
+received message: [(<0.77.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 1.0999999999999999), (<0.78.0>::nonode@nohost, (Atom('davis'), Atom('porter')), 1.0999999999999999), (<0.79.0>::nonode@nohost, (Atom('porter'), Atom('harvard')), 1.0999999999999999)]
