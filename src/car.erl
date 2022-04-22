@@ -31,7 +31,7 @@ run(Car, Port_Manager) when Car#car.pos >= 1.0 ->
 %% otherwise just go along road
 run(Car, Port_Manager) -> 
     update(Car, Port_Manager),
-    timer:sleep(50),
+    timer:sleep(100),
     run(Car#car{pos = Car#car.pos + Car#car.speed}, Port_Manager).
 
 

@@ -79,7 +79,10 @@ def listen_to_erlang(screen, visual_embeding, roads):
                 pygame.display.flip()
                 nexttime += 50000000
 
-            if not cars: break
+            if not cars: 
+                port.send(Atom("stop"))
+                break
+        
         break
 
 def draw_background(screen, visual_embeding: dict, roads: list):
@@ -112,7 +115,7 @@ def determine_bounds(embeding: dict):
 
 def determine_scale(min_val: float, max_val: float, target_width: int = 500):
     scale = (target_width * 0.9) / (max_val - min_val)
-    offset = -min_val * scale + 50
+    offset = -min_val * scale + 25
     return offset, scale
 
 def draw_car(c: Car, screen, visual_embeding) -> None:

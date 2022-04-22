@@ -22,7 +22,7 @@ manage(Caller, Path) ->
     % print_mailbox(),
     port_loop(Port),
 
-    Caller ! {self(), done}.
+    Caller ! kill.
 
 port_loop(Port) -> 
     receive
@@ -30,6 +30,10 @@ port_loop(Port) ->
             % io:format("recieved kill message~n"),
             Port ! {self(), close},
             ok;
+        {Port, {data, Bin}} ->
+            case binary_to_term(Bin) of
+                stop -> ok
+            end;
         {PID, Tag, Data} -> 
             % io:format("recieved message~n"),
             Port ! {self(), {command, term_to_binary({pid_to_list(PID), Tag, Data})}},

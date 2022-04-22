@@ -15,7 +15,6 @@ python_lib:
 toml_erl_lib:
 	@echo "cd ../lib/toml/src && echo \"yecc:file(toml_parser).\" | erl" | sh
 	@echo "cd ../lib/toml/src && echo \"leex:file(toml_lexer).\" | erl" | sh
-	# @echo "cd ../lib/toml && make install-erlang" | sh
 
 
 traffic.beam: ports.beam car.beam intersection.beam
