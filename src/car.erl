@@ -25,7 +25,7 @@ send_state(Mux, Car) ->
             [From|[To|_]] -> {From, To};
             _ -> finished
         end,
-    Mux ! {Road, Progress}.
+    Mux ! {self(), Road, Progress}.
 
 
 %% Have a car drive from its start intersection to its destination,

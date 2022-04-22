@@ -1,1 +1,2 @@
 
+received message: [((Atom('davis'), Atom('porter')), 0.1), ((Atom('davis'), Atom('porter')), 0.1), ((Atom('porter'), Atom('harvard')), 0.1)]

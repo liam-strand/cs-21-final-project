@@ -44,26 +44,39 @@ def listen_to_erlang(screen, visual_embeding, roads):
             if event.type == pygame.QUIT:
                 sys.exit()
 
-        for pid, tag, data in messages:
-            # print("hey from python", file=sys.stderr, flush=True)
+        # for pid, tag, data in messages:
+        for tag, data in messages:
             draw_background(screen, visual_embeding, roads)
 
             if tag == Atom("update"):
-                if not pid in cars.keys():
-                    cars[pid] = Car(data[0], str(data[1]), str(data[2]))
-                else:
-                    cars[pid].pos = data[0]
-                    cars[pid].start = data[1]
-                    cars[pid].end = data[2]
+                update_cars(cars, data)
             elif tag == Atom("finished"):
                 cars.pop(pid)
             else:
-                print("fuck", file=sys.stderr)
+                print("oof", file=sys.stderr)
 
+            print("processed messages", file=sys.stderr)
             draw_cars(screen, cars, visual_embeding)
+            print("drew cars", file=sys.stderr)
 
             pygame.display.flip()
+            print("flipped display", file=sys.stderr)
         break
+
+def update_cars(cars, update):
+    for data in update:
+        pid, (start, end), pos = data
+        print(pid, start, end, pos, file=sys.stderr)
+        cars[str(pid)] = Car(pos, start, end)
+        # key = str(pid)
+        # if not str(pid) in cars.keys():
+        #     cars[key] = Car(pos, start, end)
+        # else:
+        #     cars[key].pos   = pos
+        #     cars[key].start = start
+        #     cars[key].end   = end
+
+
 
 def draw_background(screen, visual_embeding: dict, roads: list):
     screen.fill(WHITE)
@@ -98,10 +111,12 @@ def determine_scale(min_val: float, max_val: float, target_width: int = 1000):
     offset = -min_val * scale + 100
     return offset, scale
 
+
 def draw_car(c: Car, screen, visual_embeding) -> None:
     x_pos, y_pos = pos_from_data(visual_embeding, c.pos, c.start, c.end)
-
     pygame.draw.circle(screen, (0, 0, 0), (x_pos, y_pos), 5)
+
+
 
 def pos_from_data(vis_emb: dict, prog: float, start: str, end: str) -> tuple:
     str_pos_x, str_pos_y = vis_emb[start]

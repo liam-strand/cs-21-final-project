@@ -12,3 +12,7 @@ and then launches an erlang repl with the simulation and toml binaries
 loaded in.  You can then call `traffic:run("roads.toml")' to start the
 simulation.
 
+To run the program without a shell, do
+
+   $ erl -noshell -pa ebin/ ../lib/toml/ebin/ \
+         -eval 'traffic:run("roads.toml")' -s init stop
