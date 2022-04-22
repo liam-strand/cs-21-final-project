@@ -1,3 +1,4 @@
+import sys
 from sim_state import Sim_State
 
 from grandalf.graphs import Vertex, Edge, Graph
@@ -5,6 +6,12 @@ from grandalf.layouts import DigcoLayout
 
 
 def embed(sim: Sim_State):
+    # redirect grandalf's output to stderr, to avoid
+    # messing up communication with erlang
+    tmp = sys.stdout
+    sys.stdout = sys.stderr
+
+
     vertices = [Vertex(data) for data in sim.intersections]
     v_dict = {}
 
@@ -32,5 +39,7 @@ def embed(sim: Sim_State):
 
     for v in graph.C[0].sV:
         embeding[v.data] = (v.view.xy[0], v.view.xy[1])
+
+    sys.stdout = tmp
 
     return embeding

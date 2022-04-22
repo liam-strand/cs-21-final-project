@@ -42,12 +42,12 @@ def display_graph(embeding: dict, roads: list) -> None:
         visual_embeding[inter] = (x, y)
 
     draw_background(screen, visual_embeding, roads)
-    
     listen_to_erlang(screen, visual_embeding, roads)
     
         
 def listen_to_erlang(screen, visual_embeding, roads):
-    messages, _port = port_connection()
+    messages, port = port_connection()
+    port.send(Atom("go"))
     print("successful connection", file=sys.stderr, flush=True)
 
     cars = {}
