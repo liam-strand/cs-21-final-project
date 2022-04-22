@@ -8,6 +8,14 @@ manage(Caller, Path) ->
                      [binary, {packet,4}, use_stdio]),
     io:format("opened port on ~s~n", [SpawnString]),
 
+    receive
+        {Port, {data, Bin}} ->
+            case binary_to_term(Bin) of
+                go -> io:format("----- running simulation!~n");
+                T  -> io:format("!!! unexpected: ~w~n", [T])
+            end
+    end,
+
     Caller ! {self(), ready},
     io:format("manager sent ready~n"),
     
