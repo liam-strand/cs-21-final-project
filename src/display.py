@@ -17,15 +17,19 @@ from car import Car
 import time
 import math
 
+RESOLUTION = 1000
+TICK_SPEED = 33333333
+
 WHITE = 255, 255, 255
 BLUE = 0, 0, 255
 RED = 255, 0, 0
 BLACK = 0, 0, 0
 GREY = 107, 107, 109
+GREEN = 0, 255, 0
 
 def display_graph(embeding: dict, roads: list) -> None:
     pygame.init()
-    size = width, height = 500, 500 # 1000, 1000
+    size = RESOLUTION, RESOLUTION
 
 
     x_min, x_max, y_min, y_max = determine_bounds(embeding)
@@ -52,8 +56,9 @@ def listen_to_erlang(screen, visual_embeding, roads):
     print("successful connection", file=sys.stderr, flush=True)
 
     cars = {}
+    done = []
 
-    nexttime = time.time_ns() + 50000000
+    nexttime = time.time_ns() + TICK_SPEED
 
     while True:
         for event in pygame.event.get():
@@ -70,6 +75,7 @@ def listen_to_erlang(screen, visual_embeding, roads):
                     cars[pid].start = data[1]
                     cars[pid].end = data[2]
             elif tag == Atom("finished"):
+                done.append(visual_embeding[cars[pid].end])
                 cars.pop(pid)
             else:
                 print("fuck", file=sys.stderr)
@@ -77,6 +83,7 @@ def listen_to_erlang(screen, visual_embeding, roads):
             if time.time_ns() > nexttime:
                 draw_background(screen, visual_embeding, roads)
                 draw_cars(screen, cars, visual_embeding)
+                draw_done(screen, done)
                 pygame.display.flip()
                 nexttime += 50000000
 
@@ -114,9 +121,9 @@ def determine_bounds(embeding: dict):
 
     return x_min, x_max, y_min, y_max
 
-def determine_scale(min_val: float, max_val: float, target_width: int = 500):
-    scale = (target_width * 0.9) / (max_val - min_val)
-    offset = -min_val * scale + 25
+def determine_scale(min_val: float, max_val: float):
+    scale = (RESOLUTION * 0.9) / (max_val - min_val)
+    offset = (-min_val * scale) + (RESOLUTION * 0.1 / 2)
     return offset, scale
 
 
@@ -143,7 +150,11 @@ def draw_car(c: Car, screen, embed) -> None:
                          [x_pos + dx1, y_pos + dy1],
                          [x_pos + dx2, y_pos + dy2]], 1)
 
-    
+def draw_done(screen, pos_list) -> None:
+    while pos_list:
+        pygame.draw.circle(screen, GREEN, pos_list[0], 5)
+        pos_list.pop(0)
+
 def pos_from_data(vis_emb: dict, prog: float, start: str, end: str) -> tuple:
     str_pos_x, str_pos_y = vis_emb[start]
     end_pos_x, end_pos_y = vis_emb[end]
