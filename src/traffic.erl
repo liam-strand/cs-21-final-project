@@ -39,8 +39,8 @@ load_graph(Path) ->
                       {string,[I,J]} = R,
                       A = list_to_atom(I),
                       B = list_to_atom(J),
-                      digraph:add_edge(G, A, B),
-                      digraph:add_edge(G, B, A) 
+                      digraph:add_edge(G, A, B)
+                      % digraph:add_edge(G, B, A) 
               end, Roads),
     G.
 

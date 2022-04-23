@@ -1,0 +1,30 @@
+intersections = [
+    "chestnut", 
+    "ball of yarn", 
+    "clam",
+    "coconut",
+    "coin"
+]
+
+roads = [ 
+      ["chestnut", "ball of yarn"],
+      ["ball of yarn", "clam"],
+      ["clam", "coconut"],
+      ["coconut", "coin"],
+      ["coin", "chestnut"]
+]
+
+[[cars]]
+speed = 0.01
+start = "chestnut"
+end   = "coconut"
+
+[[cars]]
+speed = 0.05
+start = "coconut"
+end   = "clam"
+
+[[cars]]
+speed = 0.1
+start = "coconut"
+end   = "clam"
