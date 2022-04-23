@@ -15,6 +15,7 @@ from pprint import pprint
 from erlastic import port_connection, Atom
 from car import Car
 import time
+import math
 
 WHITE = 255, 255, 255
 BLUE = 0, 0, 255
@@ -86,16 +87,16 @@ def listen_to_erlang(screen, visual_embeding, roads):
         break
 
 def draw_background(screen, visual_embeding: dict, roads: list):
-    screen.fill(GREY)
+    screen.fill(WHITE)
 
     for start, end in roads:
-        pygame.draw.line(screen, RED, visual_embeding[start], visual_embeding[end], 4)
+        pygame.draw.line(screen, BLACK, visual_embeding[start],
+                         visual_embeding[end], 1)
 
     for _inter, (x, y) in visual_embeding.items():
         pygame.draw.circle(screen, BLUE, (x, y), 10, 10)
 
 def determine_bounds(embeding: dict):
-
     x_min = -1
     x_max = -1
     y_min = -1
@@ -118,11 +119,31 @@ def determine_scale(min_val: float, max_val: float, target_width: int = 500):
     offset = -min_val * scale + 25
     return offset, scale
 
-def draw_car(c: Car, screen, visual_embeding) -> None:
-    x_pos, y_pos = pos_from_data(visual_embeding, c.pos, c.start, c.end)
 
-    pygame.draw.circle(screen, (0, 0, 0), (x_pos, y_pos), 5)
+def rotate(x, y, theta):
+    return (x * math.cos(theta) - y * math.sin(theta),
+            x * math.sin(theta) + y * math.cos(theta))
 
+
+def draw_car(c: Car, screen, embed) -> None:
+    x_pos, y_pos = pos_from_data(embed, c.pos, c.start, c.end)
+    # draw an isosceles triangle pointed towards destination!
+    x0, y0 = embed[c.start]
+    x1, y1 = embed[c.end]
+    theta = math.atan2(y1 - y0, x1 - x0) + (math.pi / 2)
+    dx0, dy0 = rotate(0, -8, theta)
+    dx1, dy1 = rotate(4, 4, theta)
+    dx2, dy2 = rotate(-4, 4, theta)
+    pygame.draw.polygon(screen, WHITE,
+                        [[x_pos + dx0, y_pos + dy0],
+                         [x_pos + dx1, y_pos + dy1],
+                         [x_pos + dx2, y_pos + dy2]])
+    pygame.draw.polygon(screen, BLACK,
+                        [[x_pos + dx0, y_pos + dy0],
+                         [x_pos + dx1, y_pos + dy1],
+                         [x_pos + dx2, y_pos + dy2]], 1)
+
+    
 def pos_from_data(vis_emb: dict, prog: float, start: str, end: str) -> tuple:
     str_pos_x, str_pos_y = vis_emb[start]
     end_pos_x, end_pos_y = vis_emb[end]

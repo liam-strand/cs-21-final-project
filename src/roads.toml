@@ -1,25 +1,30 @@
 intersections = [
     "davis", 
     "porter", 
-    "harvard"
+    "harvard",
+    "central"
 ]
 
 roads = [ 
     ["davis",   "porter"],
-    ["porter", "harvard"]
+    ["porter", "harvard"],
+    ["harvard", "central"],
+
+    ["harvard", "porter"],
+    ["porter", "davis"]
 ]
 
 [[cars]]
-speed = 0.1
+speed = 0.02
+start = "harvard"
+end   = "davis"
+
+[[cars]]
+speed = 0.04
 start = "davis"
 end   = "harvard"
 
 [[cars]]
-speed = 0.1
+speed = 0.08
 start = "davis"
-end   = "porter"
-
-[[cars]]
-speed = 0.1
-start = "porter"
-end   = "harvard"
+end   = "central"

@@ -19,9 +19,15 @@ start_intersection(G) ->
 start_car(G, Port_Manager) ->
     fun({Speed, Start, Finish}) ->
             Stops = digraph:get_short_path(G, Start, Finish),
-            Car   = car:new(Speed, Stops),
-            io:format("~w~n", [Car]),
-            spawn(car, run, [Car, Port_Manager])
+            case Stops of
+                false -> io:format("*** no path from ~w to ~w.~n",
+                                   [Start, Finish]),
+                         io:format("*** giving up.~n"),
+                         erlang:halt();
+                S -> Car = car:new(Speed, S),
+                     io:format("~w~n", [Car]),
+                     spawn(car, run, [Car, Port_Manager])
+            end
     end.
 
 load_graph(Path) ->

@@ -32,7 +32,24 @@ roads = [
     ["Granoff", "Powder-House"],
     ["Granoff", "Harleston"],
     ["Harleston", "Latin"],
-    ["Latin", "Dewick"]
+    ["Latin", "Dewick"],
+
+    ["Dowling", "DPH"],
+    ["Cummings", "Dowling"],
+    ["SEC", "Cummings"],
+    ["Gantcher", "Cummings"],
+    ["Sci-Tech", "SEC"],
+    ["Tisch", "SEC"],
+    ["So-Go", "Tisch"],
+    ["Campus-Center", "Tisch"],
+    ["So-Go", "Campus-Center"],
+    ["Dewick", "Campus-Center"],
+    ["Mods", "Campus-Center"],
+    ["Granoff", "So-Go"],
+    ["Powder-House", "Granoff"],
+    ["Harleston", "Granoff"],
+    ["Latin", "Harleston"],
+    ["Dewick", "Latin"]
 ]
 
 [[cars]]

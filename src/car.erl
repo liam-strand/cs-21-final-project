@@ -25,7 +25,7 @@ run(#car{stops=[_,_],pos=P}, Port_Manager) when P >= 1.0 ->
 
 %% wait at intersection when we reach it
 run(Car, Port_Manager) when Car#car.pos >= 1.0 -> 
-    update(Car, Port_Manager, wait),
+    %% update(Car, Port_Manager, wait),
     run(wait(Car), Port_Manager);
 
 %% otherwise just go along road
@@ -51,6 +51,6 @@ update(Car, Port_Manager) ->
     [Prev | [Next |_]] = Car#car.stops,
     Port_Manager ! {self(), update, {Car#car.pos, Prev, Next}}.
 
-update(Car, Port_Manager, wait) ->
-    [Prev | [Next |_]] = Car#car.stops,
-    Port_Manager ! {self(), update, {0.9, Prev, Next}}.
+%% update(Car, Port_Manager, wait) ->
+%%     [Prev | [Next |_]] = Car#car.stops,
+%%     Port_Manager ! {self(), update, {0.75, Prev, Next}}.

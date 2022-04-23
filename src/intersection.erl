@@ -9,7 +9,7 @@
 run(__I) -> 
     _I = cycle_lights(__I),
     I  = register_car(_I),
-    timer:sleep(500 + rand:uniform(500)),
+    timer:sleep(1000 + rand:uniform(500)),
     run(I).
 
 
