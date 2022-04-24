@@ -30,5 +30,4 @@ run: traffic.beam
 
 clean:
 	rm -f *.beam
-	rm -rf ../src/__pycache__
 	@echo "cd ../lib/toml && make clean" | sh

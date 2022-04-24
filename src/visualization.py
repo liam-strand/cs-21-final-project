@@ -14,7 +14,7 @@ from sys import argv
 
 from sim_state import Sim_State
 from embed_graph import embed
-from display import display_graph
+from display import display
 
 
 def main(args):
