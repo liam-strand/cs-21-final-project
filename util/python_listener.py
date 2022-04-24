@@ -1,6 +1,4 @@
-import threading, queue
 from erlastic import port_connection, encode, Atom as A
-from pprint import pprint
 
 
 def main():
