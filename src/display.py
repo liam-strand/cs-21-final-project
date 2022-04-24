@@ -1,36 +1,53 @@
+"""
+display.py
+
+CS 21 Final Project
+on-the-road-again
+April 2022
+
+This file contains the logic for listening to messages from the erlang port and
+updates the visualization to match the state changes.
+
+The pygame visuals are initilized along with the erlang listener in this file.
+
+"""
+
 # IMPORTANT NOTE:
-#
 # Everything from stdout gets sent to the Erlang program that spawned
-# this python process, as part of the port driver abstraction.  This
+# this python process, as part of the port driver abstraction. This
 # means that any erroneous output will confuse the Erlang server and
-# effectively break the whole program.  Normally, pygame prints a
+# effectively break the whole program. Normally, pygame prints a
 # message to stdout when you import it, so we have to set this
 # environment variable in order to suppress that message.
-import os
-os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 
-import pygame
 import sys
-from pprint import pprint
+from os import environ
+
 from erlastic import port_connection, Atom
+import pygame
+
 from car import Car
-import time
-import math
+from time import time_ns as time_ns
+from math import sin, cos, pi, atan2 as atan
 
+# Display Settings
 RESOLUTION = 1000
-TICK_SPEED = 33333333
+FRAMERATE  = 30
 
+# Color Constants
 WHITE = 255, 255, 255
-BLUE = 0, 0, 255
-RED = 255, 0, 0
-BLACK = 0, 0, 0
-GREY = 107, 107, 109
-GREEN = 0, 255, 0
+BLUE  =   0,   0, 255
+RED   = 255,   0,   0
+BLACK =   0,   0,   0
+GREY  = 107, 107, 109
+GREEN =   0, 255,   0
 
-def display_graph(embeding: dict, roads: list) -> None:
+def display(embeding: dict, roads: list) -> None:
+    
+    environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
     pygame.init()
-    size = RESOLUTION, RESOLUTION
 
+    size = RESOLUTION, RESOLUTION
 
     x_min, x_max, y_min, y_max = determine_bounds(embeding)
     x_offset, x_scale = determine_scale(x_min, x_max)
@@ -40,7 +57,6 @@ def display_graph(embeding: dict, roads: list) -> None:
     visual_embeding = {}
 
     for inter, pos in embeding.items():
-
         x = (pos[0] * x_scale) + x_offset
         y = (pos[1] * y_scale) + y_offset
 
@@ -58,7 +74,7 @@ def listen_to_erlang(screen, visual_embeding, roads):
     cars = {}
     done = []
 
-    nexttime = time.time_ns() + TICK_SPEED
+    nexttime = time_ns() + (1000000000 // FRAMERATE)
 
     while True:
         for event in pygame.event.get():
@@ -80,7 +96,7 @@ def listen_to_erlang(screen, visual_embeding, roads):
             else:
                 print("fuck", file=sys.stderr)
 
-            if time.time_ns() > nexttime:
+            if time_ns() > nexttime:
                 draw_background(screen, visual_embeding, roads)
                 draw_cars(screen, cars, visual_embeding)
                 draw_done(screen, done)
@@ -128,8 +144,8 @@ def determine_scale(min_val: float, max_val: float):
 
 
 def rotate(x, y, theta):
-    return (x * math.cos(theta) - y * math.sin(theta),
-            x * math.sin(theta) + y * math.cos(theta))
+    return (x * cos(theta) - y * sin(theta),
+            x * sin(theta) + y * cos(theta))
 
 
 def draw_car(c: Car, screen, embed) -> None:
@@ -137,7 +153,7 @@ def draw_car(c: Car, screen, embed) -> None:
     # draw an isosceles triangle pointed towards destination!
     x0, y0 = embed[c.start]
     x1, y1 = embed[c.end]
-    theta = math.atan2(y1 - y0, x1 - x0) + (math.pi / 2)
+    theta = atan(y1 - y0, x1 - x0) + (pi / 2)
     dx0, dy0 = rotate(0, -8, theta)
     dx1, dy1 = rotate(4, 4, theta)
     dx2, dy2 = rotate(-4, 4, theta)
