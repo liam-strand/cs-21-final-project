@@ -207,14 +207,37 @@ def determine_scale(min_val: float, max_val: float):
     return offset, scale
 
 
-# TODO function contract
-def rotate(x, y, theta):
+def rotate(x, y: float, theta: float) -> tuple:
+    """ Rotate a point counterclockwise about the origin.
+    Parameters:
+           x, y:  coordinates of a point
+           theta: angle of rotation, in radians
+    Returns:
+           Coordinates of (x, y) rotated counterclockwise
+           about the point (0, 0), by angle theta.
+    Effects: None
+    """
     return (x * cos(theta) - y * sin(theta),
             x * sin(theta) + y * cos(theta))
 
 
-# TODO function contract
+
 def draw_car(c: Car, screen, embed) -> None:
+    """Draw a simple representation of a car on a road.
+    Parameters:
+         c:      a Car object
+         screen: a pygame display
+         embed:  a digraph representation of the road system
+    Notes:
+         The `start' and `end' fields of `c' should be valid
+         intersections within `embed', with an edge going from `start'
+         to `end'.
+    Effects:
+         Draws a representation of `c' onto `screen'.  `c' is depicted
+         as a white isosceles triangle with a black outline, situated
+         between its start and end intersections, with its longer end
+         pointed towards the end intersection.
+    """
     x_pos, y_pos = pos_from_data(embed, c.pos, c.start, c.end)
 
     # draw an isosceles triangle pointed towards destination!
