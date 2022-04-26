@@ -28,12 +28,13 @@ import pygame
 
 from car import Car
 from time import time_ns as time_ns
-from math import sin, cos, pi, atan2 as atan
+from math import hypot, sin, cos, pi, atan2 as atan, degrees, dist, acos, radians
 
 # Display Settings
 RESOLUTION  = 1000
 FRAMERATE   = 30
 UPDATE_TIME = 1000000000 // FRAMERATE
+RWIDTH = 17
 
 # Color Constants
 WHITE = 255, 255, 255
@@ -42,6 +43,8 @@ RED   = 255,   0,   0
 BLACK =   0,   0,   0
 GREY  = 107, 107, 109
 GREEN =   0, 255,   0
+GREY2 = 160, 160, 160
+RCOLOR = 66,66,66
 
 def display(embeding: dict, roads: list) -> None:
     """Initialize and update the display based on recieved messages
@@ -162,11 +165,13 @@ def draw_background(screen, visual_embeding: dict, roads: list) -> None:
     screen.fill(WHITE)
 
     for start, end in roads:
-        pygame.draw.line(screen, BLACK, visual_embeding[start],
-                         visual_embeding[end], 1)
+        draw_road(screen,visual_embeding[start], visual_embeding[end])
+        #pygame.draw.line(screen, BLACK, visual_embeding[start],
+         #                visual_embeding[end], 1)
 
     for x, y in visual_embeding.values():
-        pygame.draw.circle(screen, BLUE, (x, y), 10, 10)
+        pygame.draw.circle(screen, RCOLOR, (x, y), 20, 20)
+        pygame.draw.circle(screen, WHITE, (x, y), 4, 4)
 
 def determine_bounds(embeding: dict) -> tuple:
     """Figure out the dimensions of the initial graph embeding.
@@ -300,3 +305,37 @@ def draw_cars(screen, cars: dict, visual_embeding: dict) -> None:
     """
     for car in cars.values():
         draw_car(car, screen, visual_embeding)
+
+
+def draw_road(screen,start,end):
+    if start[1] >= end[1]:
+        tstart = end
+        tend = start
+    else:
+        tstart = start
+        tend = end
+
+
+    # find length between two points - find a point
+    hypot = dist(tstart,tend)
+
+    # load road image
+    road = pygame.image.load("../src/road.jpg").convert()
+
+    # use trigonometry, find angle: find height diff between points, dist between points, inverse cosine of heightdiff/dist
+    xdiff, ydiff = tend[0] - tstart[0] , tend[1] - tstart[1]
+    negative = ydiff/xdiff < 0
+    angle = degrees(acos(float(ydiff)/float(hypot)))
+
+    #adjusted point to blit to center line
+    fixed1 = (tstart[0] - ((RWIDTH/2) * cos(radians(angle))), tstart[1] - ((RWIDTH/2)* sin(radians(angle))))
+
+    if negative:
+        angle *= -1
+        fixed1 = (fixed1[0] + xdiff,fixed1[1])
+
+    # rotate angle found through inverse hypot, and cut length to distance
+    subsurface = pygame.transform.rotate(road.subsurface((0, 0, RWIDTH, hypot)),angle)
+
+    subsurface.set_colorkey(GREY2)
+    screen.blit(subsurface, fixed1)
