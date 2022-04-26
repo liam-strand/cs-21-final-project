@@ -1,6 +1,9 @@
 # USER
 .vscode
 *.dSYM
+toml.d
+toml.app
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

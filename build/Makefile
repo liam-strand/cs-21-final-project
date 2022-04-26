@@ -1,3 +1,19 @@
+# Makefile
+# 
+# CS 21 Final Project
+# on-the-road-again
+# April 2022
+# 
+# 
+# A Makefile providing rules to install dependencies and run the simulation
+# 
+# Use cases:
+# 
+# install dependencies:              make dependencies
+# run simulation with default file:  make run
+# run simulation with specific file: make *.toml
+# clean up compiled files:           make clean
+# 
 
 all: dependencies run
 
