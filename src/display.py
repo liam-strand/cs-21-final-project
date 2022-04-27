@@ -249,17 +249,19 @@ def draw_car(c: Car, screen, embed) -> None:
     x0, y0 = embed[c.start]
     x1, y1 = embed[c.end]
     theta = atan(y1 - y0, x1 - x0) + (pi / 2)
+    offset_x = cos(theta) * 4
+    offset_y = sin(theta) * 4 
     dx0, dy0 = rotate(0, -8, theta)
     dx1, dy1 = rotate(4, 4, theta)
     dx2, dy2 = rotate(-4, 4, theta)
     pygame.draw.polygon(screen, WHITE,
-                        [[x_pos + dx0, y_pos + dy0],
-                         [x_pos + dx1, y_pos + dy1],
-                         [x_pos + dx2, y_pos + dy2]])
+                        [[x_pos + dx0 + offset_x, y_pos + dy0 + offset_y],
+                         [x_pos + dx1 + offset_x, y_pos + dy1 + offset_y],
+                         [x_pos + dx2 + offset_x, y_pos + dy2 + offset_y]])
     pygame.draw.polygon(screen, BLACK,
-                        [[x_pos + dx0, y_pos + dy0],
-                         [x_pos + dx1, y_pos + dy1],
-                         [x_pos + dx2, y_pos + dy2]], 1)
+                        [[x_pos + dx0 + offset_x, y_pos + dy0 + offset_y],
+                         [x_pos + dx1 + offset_x, y_pos + dy1 + offset_y],
+                         [x_pos + dx2 + offset_x, y_pos + dy2 + offset_y]], 1)
 
 
 def draw_done(screen, pos_list) -> None:

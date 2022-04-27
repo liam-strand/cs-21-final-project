@@ -51,6 +51,6 @@ update(Car, Port_Manager) ->
     [Prev | [Next |_]] = Car#car.stops,
     Port_Manager ! {self(), update, {Car#car.pos, Prev, Next}}.
 
-%% update(Car, Port_Manager, wait) ->
-%%     [Prev | [Next |_]] = Car#car.stops,
-%%     Port_Manager ! {self(), update, {0.75, Prev, Next}}.
+% update(Car, Port_Manager) ->
+%     [Prev | [Next |_]] = Car#car.stops,
+%     Port_Manager ! {self(), update, {0.75, Prev, Next}}.
