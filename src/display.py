@@ -28,7 +28,7 @@ import pygame
 
 from car import Car
 from time import time_ns as time_ns
-from math import hypot, sin, cos, pi, atan2 as atan, degrees, dist, acos, radians
+from math import sin, cos, pi, atan2 as atan, degrees, acos, radians
 
 # Display Settings
 RESOLUTION  = 1000
@@ -318,8 +318,6 @@ def draw_road(screen,start,end):
         tend = end
 
 
-    # find length between two points - find a point
-    hypot = dist(tstart,tend)
 
     # load road image
     road = pygame.image.load("../src/road.jpg").convert()
@@ -327,6 +325,10 @@ def draw_road(screen,start,end):
     # use trigonometry, find angle: find height diff between points, dist between points, inverse cosine of heightdiff/dist
     xdiff, ydiff = tend[0] - tstart[0] , tend[1] - tstart[1]
     negative = ydiff/xdiff < 0
+    # find length between two points - find a point
+    hypot = e_dist(xdiff,ydiff)
+
+    #calculate angle
     angle = degrees(acos(float(ydiff)/float(hypot)))
 
     #adjusted point to blit to center line
@@ -341,3 +343,8 @@ def draw_road(screen,start,end):
 
     subsurface.set_colorkey(GREY2)
     screen.blit(subsurface, fixed1)
+
+def e_dist(xdiff,ydiff):
+    tempx = xdiff ** 2
+    tempy = ydiff ** 2
+    return (tempx+tempy) ** .5
