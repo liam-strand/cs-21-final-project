@@ -31,7 +31,7 @@ from time import time_ns as time_ns
 from math import sin, cos, pi, atan2 as atan, degrees, acos, radians
 
 # Display Settings
-RESOLUTION  = 500
+RESOLUTION  = 1000
 FRAMERATE   = 30
 UPDATE_TIME = 1000000000 // FRAMERATE
 RWIDTH = 17
@@ -129,9 +129,15 @@ def listen_to_erlang(screen, visual_embeding, roads) -> None:
                 done.append(visual_embeding[cars[pid].end])
                 cars.pop(pid)
             
+            elif tag == Atom("waiting"):
+                cars[pid].pos = 0.9
+
+            elif tag == Atom("tick"):
+                pass
+
             # If we get a message that we don't understand we emit an expletive
             else:
-                print("fuck", file=sys.stderr)
+                print("fuck", file=sys.stderr, flush=True)
 
             # If it is time to update the display, we do so and set the timer
             # for 1 // FRAMERATE seconds.

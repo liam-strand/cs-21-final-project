@@ -42,7 +42,7 @@ toml_erl_lib:
 
 # traffic.beam relies on these other files so it makes sense to have them
 # listed as dependencies here
-traffic.beam: ports.beam car.beam intersection.beam
+traffic.beam: ports.beam car.beam intersection.beam clock.beam
 
 # A catch-all that makes it so that running make run runs the simulation in a 
 # reasonable way, assuming make dependencies has already been run

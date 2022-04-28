@@ -48,7 +48,7 @@ def embed(sim: Sim_State):
     # Here we actually perform the 2D graph embeding
     dig = DigcoLayout(graph.C[0])
     dig.init_all()
-    dig.draw()
+    dig.draw(N=100)
 
     # Then we record the result of that embeding in a dictionary.
     embeding = {}

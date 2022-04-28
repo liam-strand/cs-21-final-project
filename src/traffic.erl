@@ -60,7 +60,7 @@ load_cars(Path) ->
         {<<"start">>, Start}] = C,
 
         {
-            Speed, 
+            Speed / 3, 
             list_to_atom(binary_to_list(Start)), 
             list_to_atom(binary_to_list(End))
         }
@@ -71,7 +71,7 @@ load_cars(Path) ->
 run(Path) ->
     G    = load_graph(Path),
     Cars = load_cars(Path),
-
+    io:format("~w~n", [Cars]),
     %% Open the port and wait for confirmation of success.
     Port_Manager = spawn(ports, manage, [self(), Path]),
     receive {Port_Manager, ready} -> ok end,
@@ -82,12 +82,16 @@ run(Path) ->
     %% start cars
     lists:map(start_car(G, Port_Manager), Cars),
 
+    Clock = clock:start(Port_Manager),
+
     io:format('started everything~n'),
 
     %% kill switch, for convenience
     receive
-        kill -> lists:map(fun(V) -> exit(whereis(V), kill) end, 
-                          digraph:vertices(G))
+        kill -> 
+            lists:map(fun(V) -> exit(whereis(V), kill) end, 
+                          digraph:vertices(G)),
+            clock:stop(Clock)
     end,
 
     %% the end

@@ -26,7 +26,7 @@ run(#car{stops=[_,_],pos=P}, Port_Manager) when P >= 1.0 ->
 %% wait at intersection when we reach it
 run(Car, Port_Manager) when Car#car.pos >= 1.0 -> 
     %% update(Car, Port_Manager, wait),
-    run(wait(Car), Port_Manager);
+    run(wait(Car, Port_Manager), Port_Manager);
 
 %% otherwise just go along road
 run(Car, Port_Manager) -> 
@@ -39,8 +39,9 @@ run(Car, Port_Manager) ->
 
 %% Wait at an intersection, and continue on to the
 %% next road when signaled.
-wait(#car{stops=[Prev|[Cur|Next]], speed=S}) -> 
+wait(#car{stops=[Prev|[Cur|Next]], speed=S}, Port_Manager) -> 
     Cur ! {wait, self(), Prev, hd(Next)},
+    update(waiting, Port_Manager, Cur),
     io:format("~w waiting at ~w~n", [self(), Cur]),
     receive
         go -> io:format("~w got signal -> ~w~n", [self(), Next]),
@@ -51,6 +52,5 @@ update(Car, Port_Manager) ->
     [Prev | [Next |_]] = Car#car.stops,
     Port_Manager ! {self(), update, {Car#car.pos, Prev, Next}}.
 
-% update(Car, Port_Manager) ->
-%     [Prev | [Next |_]] = Car#car.stops,
-%     Port_Manager ! {self(), update, {0.75, Prev, Next}}.
+update(waiting, Port_Manager, Cur) ->
+    Port_Manager ! {self(), waiting, {Cur}}.
