@@ -4,7 +4,6 @@
 -record(intersect, {in=[], out=[], queues=#{}, lights}).
 
 
-
 %% Repeatedly enqueue and signal cars.
 run(__I) -> 
     _I = cycle_lights(__I),
@@ -56,8 +55,11 @@ cycle_lights(I) ->
 signal_light(I, L) -> 
     %% signal cars at start of queue to go
     Q = maps:get(L, I#intersect.queues),
-    {Lucky, Rest} = queue:split(min(5, queue:len(Q)), Q),
+
+    %% Select a random number of cars from the head of the queue and awaken
+    {Lucky, Rest} = queue:split(rand:uniform(queue:len(Q)), Q),
     awaken_queue(Lucky),
+
     %% update queue map
     Queues = maps:update(L, Rest, I#intersect.queues),
     I#intersect{queues=Queues}.

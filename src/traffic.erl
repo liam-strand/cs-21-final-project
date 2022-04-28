@@ -71,7 +71,8 @@ load_cars(Path) ->
 run(Path) ->
     G    = load_graph(Path),
     Cars = load_cars(Path),
-    io:format("~w~n", [Cars]),
+
+    %% Open the port and wait for confirmation of success.
     Port_Manager = spawn(ports, manage, [self(), Path]),
     receive {Port_Manager, ready} -> ok end,
 

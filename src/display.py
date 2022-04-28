@@ -31,7 +31,7 @@ from time import time_ns as time_ns
 from math import sin, cos, pi, atan2 as atan, degrees, acos, radians
 
 # Display Settings
-RESOLUTION  = 1000
+RESOLUTION  = 500
 FRAMERATE   = 30
 UPDATE_TIME = 1000000000 // FRAMERATE
 RWIDTH = 17
@@ -322,7 +322,8 @@ def draw_road(screen,start,end):
     # load road image
     road = pygame.image.load("../src/road.jpg").convert()
 
-    # use trigonometry, find angle: find height diff between points, dist between points, inverse cosine of heightdiff/dist
+    # use trigonometry, find angle: find height diff between points, 
+    # dist between points, inverse cosine of heightdiff/dist
     xdiff, ydiff = tend[0] - tstart[0] , tend[1] - tstart[1]
     negative = ydiff/xdiff < 0
     # find length between two points - find a point
