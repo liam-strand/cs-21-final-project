@@ -117,7 +117,7 @@ def listen_to_erlang(screen, visual_embeding, roads) -> None:
                 if not pid in cars.keys():
                     cars[pid] = Car(data[0], str(data[1]), str(data[2]))
                 else:
-                    cars[pid].pos = data[0]
+                    cars[pid].pos = min(data[0], 0.95)
                     cars[pid].start = data[1]
                     cars[pid].end = data[2]
             
@@ -130,7 +130,7 @@ def listen_to_erlang(screen, visual_embeding, roads) -> None:
                 cars.pop(pid)
             
             elif tag == Atom("waiting"):
-                cars[pid].pos = 0.9
+                cars[pid].pos = 0.95
 
             elif tag == Atom("tick"):
                 pass
