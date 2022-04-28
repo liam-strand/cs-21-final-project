@@ -137,7 +137,7 @@ def listen_to_erlang(screen, visual_embeding, roads) -> None:
 
             # If we get a message that we don't understand we emit an expletive
             else:
-                print("fuck", file=sys.stderr, flush=True)
+                print("crap", file=sys.stderr, flush=True)
 
             # If it is time to update the display, we do so and set the timer
             # for 1 // FRAMERATE seconds.
