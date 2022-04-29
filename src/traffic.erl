@@ -1,3 +1,8 @@
+%% The top-level module for running a traffic simulation.  To start it
+%% up, call `run(Path)', where `Path' is the location of a TOML
+%% configuration file that specifies the layout of a road network, as
+%% well as cars with speed and destination attributes.  For more
+%% information on configuration syntax, see the README.
 -module(traffic).
 -export([run/1]).
 
@@ -19,6 +24,7 @@ start_intersection(G) ->
 start_car(G, Port_Manager) ->
     fun({Speed, Start, Finish}) ->
             Stops = digraph:get_short_path(G, Start, Finish),
+            %% make sure a path from `Start' to `Finish' exists.
             case Stops of
                 false -> io:format("*** no path from ~w to ~w.~n",
                                    [Start, Finish]),
@@ -30,6 +36,11 @@ start_car(G, Port_Manager) ->
             end
     end.
 
+
+%% Read a TOML config file specifying a road network as a digraph.
+%% Returns a digraph (from the `digraph' module) representing the
+%% network.  Edges represent roads, and vertices represent
+%% intersections.
 load_graph(Path) ->
     %% load info from config file
     {ok, Cfg} = toml:read_file(Path),
@@ -46,10 +57,12 @@ load_graph(Path) ->
                       A = list_to_atom(I),
                       B = list_to_atom(J),
                       digraph:add_edge(G, A, B)
-                    %   digraph:add_edge(G, B, A) 
               end, Roads),
     G.
 
+
+%% Load car information from the TOML config file at `Path'.
+%% Returns car data in the format `{Speed, Start, End}'.
 load_cars(Path) ->
     {ok, Cfg} = toml:read_file(Path),
     {array, {object, RawCars}} = toml:get_value([], "cars", Cfg),
@@ -64,24 +77,28 @@ load_cars(Path) ->
             list_to_atom(binary_to_list(Start)), 
             list_to_atom(binary_to_list(End))
         }
-
     end, RawCars).
 
-%% should be spawned, so that the kill switch can be utilized
+
+
+
+%% Run a traffic simulation, loading the road network from the TOML
+%% file identified by `Path'.  Shuts down when sent the message `kill'.
 run(Path) ->
+    %% Load digraph and cars from TOML file.
     G    = load_graph(Path),
     Cars = load_cars(Path),
     io:format("~w~n", [Cars]),
+
     %% Open the port and wait for confirmation of success.
     Port_Manager = spawn(ports, manage, [self(), Path]),
     receive {Port_Manager, ready} -> ok end,
 
-    %% launch a process for each intersection,
-    %% and label each intersection with corresponding pid
+    %% launch a process for each intersection
     lists:map(start_intersection(G), digraph:vertices(G)),
     %% start cars
     lists:map(start_car(G, Port_Manager), Cars),
-
+    %% start the clock
     Clock = clock:start(Port_Manager),
 
     io:format('started everything~n'),

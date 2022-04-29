@@ -1,3 +1,8 @@
+%% Defines an abstract interfaces for an intersection, which runs as a
+%% process.  The intersection can be sent a message of the form
+%% `{wait, Pid, From, To}', which enqueues the process at `Pid', and
+%% signals that process with the atom `go' when the path going from
+%% intersection `From' to `To' is open.
 -module(intersection).
 -export([new/2, run/1]).
 
@@ -57,11 +62,10 @@ signal_light(I, L) ->
     %% signal cars at start of queue to go
     Q = maps:get(L, I#intersect.queues),
 
-    % 
+    %% Dequeue at most queue:len(Q) 'lucky' cars.
     SafeLen = max(1, queue:len(Q)),
     RandLen = max(rand:uniform(SafeLen), 5),
     {Lucky, Rest} = queue:split(min(RandLen, queue:len(Q)), Q),
-
 
     %% wake up all the cars that have been selected
     awaken_queue(Lucky),
