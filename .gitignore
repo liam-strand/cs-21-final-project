@@ -4,6 +4,13 @@
 toml.d
 toml.app
 
+submitted-docs/final-report/final-report.aux
+submitted-docs/final-report/final-report.log
+submitted-docs/final-report/final-report.out
+submitted-docs/final-report/final-report.pdf
+submitted-docs/final-report/final-report.synctex.gz
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
