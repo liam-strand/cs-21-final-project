@@ -260,8 +260,8 @@ def draw_car(c: Car, screen, embed) -> None:
     x0, y0 = embed[c.start]
     x1, y1 = embed[c.end]
     theta = atan(y1 - y0, x1 - x0) + (pi / 2)
-    offset_x = cos(theta) * 4
-    offset_y = sin(theta) * 4 
+    offset_x = cos(theta) * 6
+    offset_y = sin(theta) * 6 
     dx0, dy0 = rotate(0, -8, theta)
     dx1, dy1 = rotate(4, 4, theta)
     dx2, dy2 = rotate(-4, 4, theta)
