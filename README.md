@@ -1,8 +1,4 @@
-README
-
-CS 21 Final Project\
-on-the-road-again\
-April 2022
+# on-the-road-again
 
 ## Dependencies
 
