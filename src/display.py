@@ -23,7 +23,8 @@ environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 
 import sys
 
-from erlastic import port_connection, Atom
+from erpy import stdio_port_connection
+from term import Atom
 import pygame
 
 from car import Car
@@ -87,7 +88,7 @@ def listen_to_erlang(screen, visual_embeding, roads) -> None:
     """
     
     # Set up the connection to erlang port (aka stdin and stdout)
-    inbox, port = port_connection()
+    inbox, port = stdio_port_connection()
     port.send(Atom("go"))
     print("successful connection", file=sys.stderr, flush=True)
 
@@ -109,52 +110,53 @@ def listen_to_erlang(screen, visual_embeding, roads) -> None:
         # our message format insists that messages are a 3-tuple of form...
         #       {sender's PID (string), data tag (Atom), data (Any)}
         # the pid is a string because erlastic doesn't understand the new
-        # erlang pid binary encoding 
-        for pid, tag, data in inbox:
+        # erlang pid binary encoding
+        for msg in inbox:
+            match msg:
+                case (pid, tag, data):
+                    # If we get a car's update, we update their location in our
+                    # internal representation. If it is a new car we add it.
+                    if tag == Atom("update"):
+                        if not pid in cars.keys():
+                            cars[pid] = Car(data[0], str(data[1]), str(data[2]))
+                        else:
+                            cars[pid].pos = min(data[0], 0.95)
+                            cars[pid].start = data[1]
+                            cars[pid].end = data[2]
+                    
+                    # If a car tells us it has reached its destination, we remove it
+                    # from the internal representation. We also mark the final
+                    # destination of the car, so we can make it flash on the next
+                    # screen update.
+                    elif tag == Atom("finished"):
+                        done.append(visual_embeding[cars[pid].end])
+                        cars.pop(pid)
+                    
+                    elif tag == Atom("waiting"):
+                        cars[pid].pos = 0.95
 
-            # If we get a car's update, we update their location in our
-            # internal representation. If it is a new car we add it.
-            if tag == Atom("update"):
-                if not pid in cars.keys():
-                    cars[pid] = Car(data[0], str(data[1]), str(data[2]))
-                else:
-                    cars[pid].pos = min(data[0], 0.95)
-                    cars[pid].start = data[1]
-                    cars[pid].end = data[2]
-            
-            # If a car tells us it has reached its destination, we remove it
-            # from the internal representation. We also mark the final
-            # destination of the car, so we can make it flash on the next
-            # screen update.
-            elif tag == Atom("finished"):
-                done.append(visual_embeding[cars[pid].end])
-                cars.pop(pid)
-            
-            elif tag == Atom("waiting"):
-                cars[pid].pos = 0.95
+                    elif tag == Atom("tick"):
+                        pass
 
-            elif tag == Atom("tick"):
-                pass
+                    # If we get a message that we don't understand we emit an expletive
+                    else:
+                        print("crap", file=sys.stderr, flush=True)
 
-            # If we get a message that we don't understand we emit an expletive
-            else:
-                print("crap", file=sys.stderr, flush=True)
+                    # If it is time to update the display, we do so and set the timer
+                    # for 1 // FRAMERATE seconds.
+                    if time_ns() > nexttime:
+                        draw_background(screen, visual_embeding, roads)
+                        draw_cars(screen, cars, visual_embeding)
+                        draw_done(screen, done)
+                        pygame.display.flip()
+                        nexttime += UPDATE_TIME
 
-            # If it is time to update the display, we do so and set the timer
-            # for 1 // FRAMERATE seconds.
-            if time_ns() > nexttime:
-                draw_background(screen, visual_embeding, roads)
-                draw_cars(screen, cars, visual_embeding)
-                draw_done(screen, done)
-                pygame.display.flip()
-                nexttime += UPDATE_TIME
-
-            # When every car has reached its destination, we tell the erlang
-            # port that we are done, then terminate the loop.
-            if not cars: 
-                port.send(Atom("stop"))
-                break
-        
+                    # When every car has reached its destination, we tell the erlang
+                    # port that we are done, then terminate the loop.
+                    if not cars: 
+                        port.send(Atom("stop"))
+                        break
+                
         # Again, this outer loop is just boilerplate to convince pygame that
         # we are paying attention to their event loop. We are not.
         break
