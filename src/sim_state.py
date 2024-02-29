@@ -15,7 +15,7 @@ into the standard library under the name tomllib in Python 3.11.
 
 """
 
-import tomli as tomllib
+import tomllib
 from pprint import pprint
 
 

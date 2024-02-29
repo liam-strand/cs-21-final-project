@@ -30,9 +30,8 @@ dependencies: python_lib toml_erl_lib
 # Python libraries are installed to the user, and ignored if already present
 python_lib:
 	python3 -m pip -q --exists-action i install --user pygame
-	python3 -m pip -q --exists-action i install --user erpy
-	python3 -m pip -q --exists-action i install --user tomli
 	python3 -m pip -q --exists-action i install --user grandalf
+	python3 -m pip -q --exists-action i install --user erpy
 
 # The necessary files are compiled for the erlang toml library
 toml_erl_lib:
